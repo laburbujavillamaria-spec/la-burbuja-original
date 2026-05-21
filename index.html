@@ -628,282 +628,32 @@
 <!-- HERO CAROUSEL -->
 <section class="hero">
   <div class="carousel" id="carousel">
-
-    <!-- SLIDE 1 -->
     <div class="carousel-slide active">
       <img src="imagen-local.jpg" alt="Local La Burbuja" loading="eager">
       <div class="carousel-overlay"></div>
     </div>
-
-    <!-- SLIDE 2 -->
     <div class="carousel-slide">
-      <img src="la_burbuja-02.png" alt="Logo La Burbuja" loading="lazy">
+      <img src="la_burbuja-02.png" alt="Logo La Burbuja" loading="lazy" style="object-fit: contain; background: #1a1a2e;">
       <div class="carousel-overlay"></div>
     </div>
-
-    <!-- CONTENIDO -->
     <div class="carousel-content">
-
-      <div class="hero-badge">
-        ✦ DESDE 1992 · VILLA MARÍA, CÓRDOBA
-      </div>
-
-      <img src="la_burbuja-02.png"
-           alt="La Burbuja"
-           class="hero-logo-img">
-
-      <h1 class="hero-title">
-        Todo en productos<br>
-        de <span>limpieza</span>
-      </h1>
-
-      <p class="hero-sub">
-        Sueltos y envasados.
-        Para el hogar, la oficina y el negocio.
-        <br>
-        Con la atención que merecés.
-      </p>
-
+      <div class="hero-badge">✦ DESDE 1992 · VILLA MARÍA, CÓRDOBA</div>
+      <img src="la_burbuja-02.png" alt="La Burbuja" class="hero-logo-img">
+      <h1 class="hero-title">Todo en productos<br>de <span>limpieza</span></h1>
+      <p class="hero-sub">Sueltos y envasados. Para el hogar, la oficina y el negocio.<br>Con la atención que merecés.</p>
       <div class="hero-btns">
-
-        <a href="#productos" class="btn-primary">
-          Ver productos
-        </a>
-
-        <a href="https://wa.me/5493534012349"
-           target="_blank"
-           rel="noopener"
-           class="btn-secondary">
-          Consultanos
-        </a>
-
+        <a href="#productos" class="btn-primary">Ver productos</a>
+        <a href="https://wa.me/5493534012349" target="_blank" rel="noopener" class="btn-secondary">Consultanos</a>
       </div>
     </div>
-
-    <!-- FLECHA IZQUIERDA -->
-    <button class="carousel-arrow prev"
-            id="carPrev"
-            aria-label="Anterior">
-      &#8592;
-    </button>
-
-    <!-- FLECHA DERECHA -->
-    <button class="carousel-arrow next"
-            id="carNext"
-            aria-label="Siguiente">
-      &#8594;
-    </button>
-
-    <!-- DOTS -->
+    <button class="carousel-arrow prev" id="carPrev" aria-label="Anterior">&#8592;</button>
+    <button class="carousel-arrow next" id="carNext" aria-label="Siguiente">&#8594;</button>
     <div class="carousel-dots" id="carDots">
       <button class="carousel-dot active" data-idx="0"></button>
       <button class="carousel-dot" data-idx="1"></button>
     </div>
-
   </div>
 </section>
-
-<style>
-
-/* HERO */
-.hero{
-  position:relative;
-  overflow:hidden;
-}
-
-/* CAROUSEL */
-.carousel{
-  position:relative;
-  width:100%;
-  height:100vh;
-}
-
-/* SLIDES */
-.carousel-slide{
-  position:absolute;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  overflow:hidden;
-  opacity:0;
-  transition:opacity .7s ease;
-}
-
-.carousel-slide.active{
-  opacity:1;
-  z-index:1;
-}
-
-/* IMÁGENES */
-.carousel-slide img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  object-position:center center;
-  display:block;
-}
-
-/* SLIDE LOGO */
-.carousel-slide img[alt="Logo La Burbuja"]{
-  object-fit:contain;
-  width:80%;
-  height:80%;
-  padding:30px;
-  background:#1a1a2e;
-}
-
-/* OVERLAY */
-.carousel-overlay{
-  position:absolute;
-  inset:0;
-  background:rgba(0,0,0,.45);
-}
-
-/* CONTENIDO */
-.carousel-content{
-  position:relative;
-  z-index:5;
-  height:100%;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  color:#fff;
-  padding:20px;
-}
-
-.hero-badge{
-  margin-bottom:20px;
-  font-size:.9rem;
-  letter-spacing:2px;
-}
-
-.hero-logo-img{
-  width:150px;
-  margin-bottom:20px;
-}
-
-.hero-title{
-  font-size:3rem;
-  line-height:1.1;
-  margin-bottom:20px;
-}
-
-.hero-title span{
-  color:#00d4ff;
-}
-
-.hero-sub{
-  font-size:1.1rem;
-  margin-bottom:30px;
-}
-
-/* BOTONES */
-.hero-btns{
-  display:flex;
-  gap:15px;
-  flex-wrap:wrap;
-  justify-content:center;
-}
-
-.btn-primary,
-.btn-secondary{
-  padding:14px 28px;
-  border-radius:50px;
-  text-decoration:none;
-  font-weight:bold;
-  transition:.3s ease;
-}
-
-.btn-primary{
-  background:#00d4ff;
-  color:#111;
-}
-
-.btn-secondary{
-  border:2px solid #fff;
-  color:#fff;
-}
-
-.btn-primary:hover,
-.btn-secondary:hover{
-  transform:translateY(-3px);
-}
-
-/* FLECHAS */
-.carousel-arrow{
-  position:absolute;
-  top:50%;
-  transform:translateY(-50%);
-  z-index:10;
-  width:50px;
-  height:50px;
-  border:none;
-  border-radius:50%;
-  background:rgba(255,255,255,.15);
-  color:#fff;
-  font-size:2rem;
-  cursor:pointer;
-}
-
-.carousel-arrow.prev{
-  left:20px;
-}
-
-.carousel-arrow.next{
-  right:20px;
-}
-
-/* DOTS */
-.carousel-dots{
-  position:absolute;
-  bottom:30px;
-  left:50%;
-  transform:translateX(-50%);
-  z-index:10;
-  display:flex;
-  gap:10px;
-}
-
-.carousel-dot{
-  width:12px;
-  height:12px;
-  border:none;
-  border-radius:50%;
-  background:rgba(255,255,255,.5);
-  cursor:pointer;
-}
-
-.carousel-dot.active{
-  background:#fff;
-}
-
-/* RESPONSIVE */
-@media (max-width:768px){
-
-  .hero-title{
-    font-size:2.2rem;
-  }
-
-  .hero-sub{
-    font-size:1rem;
-  }
-
-  .hero-logo-img{
-    width:120px;
-  }
-
-  .carousel-slide img[alt="Logo La Burbuja"]{
-    width:90%;
-    height:90%;
-    padding:20px;
-  }
-
-}
-
-</style>
 
 <!-- STATS BAR -->
 <div class="stats-bar reveal">
@@ -1416,4 +1166,12 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
 
 </script>
 </body>
+</html>
+‎html‎
+4 ReferencesSearch
+
+‎In this file‎
+<!DOCTYPE html>
+<html lang="es">
+  html { scroll-behavior: smooth; }
 </html>
