@@ -186,9 +186,8 @@
     display: none; }
   .section-header h2 { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--navy); }
   .section-header p { color: var(--gray); margin-top: 6px; }
-  .products-container { display: flex; flex-direction: column; gap: 48px; }
-  .product-category { opacity: 0; transform: translateY(30px); transition: opacity .6s ease, transform .6s ease; }
-  .product-category.visible { opacity: 1; transform: translateY(0); }
+  .products-container { display: flex; flex-direction: column; gap: 48px; overflow: hidden; }
+  .product-category { opacity: 1; transform: translateY(0); }
   .category-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px;
     padding: 16px; border-bottom: 2px solid rgba(77,200,216,.2);
     background: rgba(77,200,216,.07); border-radius: 12px 12px 0 0; }
@@ -974,15 +973,7 @@ const revealObserver = new IntersectionObserver((entries) => {
 document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
 // ── PRODUCT CATEGORY REVEAL ──
-const catObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-    }
-  });
-}, { threshold: 0.08 });
 
-document.querySelectorAll('.product-category').forEach(el => catObserver.observe(el));
 
 // ── SIDEBAR ACTIVE STATE ──
 const catSections = document.querySelectorAll('.product-category');
