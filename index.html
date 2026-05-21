@@ -641,7 +641,7 @@
       <div class="carousel-overlay"></div>
     </div>
 
-    <!-- Contenido -->
+    <!-- CONTENIDO -->
     <div class="carousel-content">
       <div class="hero-badge">
         ✦ DESDE 1992 · VILLA MARÍA, CÓRDOBA
@@ -673,7 +673,7 @@
       </div>
     </div>
 
-    <!-- Flechas -->
+    <!-- FLECHAS -->
     <button class="carousel-arrow prev" id="carPrev" aria-label="Anterior">
       &#8592;
     </button>
@@ -682,7 +682,7 @@
       &#8594;
     </button>
 
-    <!-- Indicadores -->
+    <!-- DOTS -->
     <div class="carousel-dots" id="carDots">
       <button class="carousel-dot active" data-idx="0"></button>
       <button class="carousel-dot" data-idx="1"></button>
@@ -705,7 +705,7 @@
   height: 100vh;
 }
 
-/* Slides */
+/* SLIDES */
 .carousel-slide {
   position: absolute;
   inset: 0;
@@ -722,14 +722,14 @@
   z-index: 1;
 }
 
-/* Overlay */
+/* OVERLAY */
 .carousel-overlay {
   position: absolute;
   inset: 0;
   background: rgba(0,0,0,.45);
 }
 
-/* Imágenes centradas */
+/* IMÁGENES CENTRADAS */
 .carousel-slide img {
   width: 100%;
   height: 100%;
@@ -738,7 +738,7 @@
   display: block;
 }
 
-/* Logo slide */
+/* LOGO */
 .carousel-slide img[alt="Logo La Burbuja"] {
   object-fit: contain;
   width: 80%;
@@ -748,7 +748,7 @@
   padding: 30px;
 }
 
-/* Contenido */
+/* CONTENIDO */
 .carousel-content {
   position: relative;
   z-index: 3;
@@ -757,13 +757,19 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  text-align: center;
   color: white;
+  text-align: center;
   padding: 20px;
 }
 
+.hero-badge {
+  margin-bottom: 20px;
+  font-size: .9rem;
+  letter-spacing: 2px;
+}
+
 .hero-logo-img {
-  width: 160px;
+  width: 150px;
   margin-bottom: 20px;
 }
 
@@ -782,11 +788,12 @@
   margin-bottom: 30px;
 }
 
-/* Botones */
+/* BOTONES */
 .hero-btns {
   display: flex;
   gap: 15px;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .btn-primary,
@@ -795,7 +802,7 @@
   border-radius: 50px;
   text-decoration: none;
   font-weight: bold;
-  transition: .3s;
+  transition: .3s ease;
 }
 
 .btn-primary {
@@ -813,19 +820,19 @@
   transform: translateY(-3px);
 }
 
-/* Flechas */
+/* FLECHAS */
 .carousel-arrow {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
   z-index: 5;
-  background: rgba(255,255,255,.15);
-  border: none;
-  color: white;
-  font-size: 2rem;
   width: 50px;
   height: 50px;
+  border: none;
   border-radius: 50%;
+  background: rgba(255,255,255,.15);
+  color: white;
+  font-size: 2rem;
   cursor: pointer;
 }
 
@@ -837,7 +844,7 @@
   right: 20px;
 }
 
-/* Dots */
+/* DOTS */
 .carousel-dots {
   position: absolute;
   bottom: 30px;
@@ -851,8 +858,8 @@
 .carousel-dot {
   width: 12px;
   height: 12px;
-  border-radius: 50%;
   border: none;
+  border-radius: 50%;
   background: rgba(255,255,255,.5);
   cursor: pointer;
 }
@@ -861,8 +868,9 @@
   background: white;
 }
 
-/* Responsive */
+/* RESPONSIVE */
 @media (max-width: 768px) {
+
   .hero-title {
     font-size: 2.2rem;
   }
@@ -874,6 +882,13 @@
   .hero-logo-img {
     width: 120px;
   }
+
+  .carousel-slide img[alt="Logo La Burbuja"] {
+    width: 90%;
+    height: 90%;
+    padding: 20px;
+  }
+
 }
 </style>
 
