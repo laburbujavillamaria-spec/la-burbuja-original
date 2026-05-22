@@ -26,10 +26,15 @@
   html { scroll-behavior: smooth; }
   body { font-family: 'Nunito', sans-serif; background: var(--white); color: #1f2937; overflow-x: hidden; }
 
+  /* ── TOP BAR ── */
+  .top-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 1001;
+    height: 4px; background: linear-gradient(90deg, var(--sky), var(--navy), var(--sky)); }
+
   /* ── NAVBAR ── */
-  .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-    background: rgba(255,255,255,.96); backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(77,200,216,.2);
+  .nav { position: fixed; top: 4px; left: 0; right: 0; z-index: 1000;
+    background: linear-gradient(135deg, rgba(26,58,107,.06) 0%, rgba(77,200,216,.1) 100%);
+    backdrop-filter: blur(16px);
+    border-bottom: 2px solid var(--sky);
     display: flex; align-items: center; justify-content: space-between;
     padding: 0 5%; height: 68px; transition: box-shadow .3s; }
   .nav.scrolled { box-shadow: 0 2px 20px rgba(26,58,107,.15); }
@@ -37,12 +42,23 @@
   .nav-logo { height: 62px; width: auto; }
   .nav-name { font-size: 1.5rem; font-weight: 900; color: var(--sky); line-height: 1;
     letter-spacing: .02em; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
-    background: rgba(77,200,216,.12); padding: 8px 18px; border-radius: 12px; }
+    background: rgba(77,200,216,.12); padding: 8px 18px; border-radius: 12px; position: relative; }
   .nav-name span { color: var(--navy); font-size: .8rem; font-weight: 800; letter-spacing: .1em; }
+  .bubble { position: absolute; border-radius: 50%; background: rgba(77,200,216,.35);
+    pointer-events: none; animation: floatBubble 4s ease-in-out infinite; }
+  .b1 { width: 10px; height: 10px; top: -6px; left: 10%; animation-delay: 0s; }
+  .b2 { width: 6px; height: 6px; bottom: -4px; right: 20%; animation-delay: 1.5s; background: rgba(77,200,216,.5); }
+  .b3 { width: 8px; height: 8px; top: 50%; right: -4px; animation-delay: 3s; }
+  @keyframes floatBubble {
+    0%, 100% { transform: translateY(0) scale(1); opacity: .6; }
+    50% { transform: translateY(-8px) scale(1.15); opacity: 1; }
+  }
   .nav-links { display: flex; align-items: center; gap: 8px; }
   .nav-link { color: var(--navy); text-decoration: none; font-weight: 700; font-size: .88rem;
     padding: 6px 14px; border-radius: 20px; transition: background .2s, color .2s; }
   .nav-link:hover { background: var(--light); color: var(--sky); }
+  .nav-link-highlight { background: rgba(77,200,216,.15); border: 1px solid rgba(77,200,216,.3); }
+  .nav-link-highlight:hover { background: var(--sky); color: #fff; }
   .nav-ig { display: flex; align-items: center; gap: 6px; padding: 7px 12px;
     border-radius: 20px; text-decoration: none; font-weight: 700; font-size: .85rem;
     background: linear-gradient(135deg,#f9a825,#e91e8c,#9c27b0); color: #fff; transition: opacity .2s; }
@@ -53,13 +69,14 @@
   .nav-wa:hover { opacity: .88; }
 
   /* ── HERO CAROUSEL ── */
-  .hero { position: relative; height: 100vh; min-height: 600px; overflow: hidden; margin-top: 68px; }
+  .hero { position: relative; height: 100vh; min-height: 600px; overflow: hidden; margin-top: 72px; }
   .carousel { position: relative; width: 100%; height: 100%; }
   .carousel-slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1s ease; display: flex; align-items: center; justify-content: center; }
   .carousel-slide.active { opacity: 1; }
   .carousel-slide img, .carousel-slide video { width: 100%; height: 100%; object-fit: cover; object-position: center; }
   .carousel-overlay { position: absolute; inset: 0;
-    background: linear-gradient(135deg, rgba(26,58,107,.82) 0%, rgba(26,58,107,.55) 60%, rgba(77,200,216,.25) 100%); }
+    background: linear-gradient(135deg, rgba(26,58,107,.88) 0%, rgba(26,58,107,.5) 50%, rgba(77,200,216,.35) 100%);
+    box-shadow: inset 0 -60px 50px -20px rgba(77,200,216,.15); }
   .carousel-slide video { -webkit-mask-image: linear-gradient(to right, transparent 2%, #000 12%, #000 88%, transparent 98%);
     mask-image: linear-gradient(to right, transparent 2%, #000 12%, #000 88%, transparent 98%); }
   .carousel-content { position: absolute; inset: 0; display: flex; flex-direction: column;
@@ -300,7 +317,7 @@
     .products-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
     .category-header { flex-wrap: wrap; padding: 12px; gap: 10px; }
     .category-wa-btn { padding: 6px 12px; font-size: .75rem; }
-    .hero { margin-top: 68px; }
+    .hero { margin-top: 72px; }
     .carousel-content { padding: 0 5%; }
     .nav-links .nav-link { display: none; }
     .nav-ig, .nav-wa { padding: 7px 8px; gap: 0; border-radius: 50%; min-width: 38px; min-height: 38px; justify-content: center; }
@@ -310,7 +327,7 @@
     .nav-logo { height: 48px; }
     .nav-name { font-size: 1.05rem; color: var(--sky);
       background: rgba(77,200,216,.1); padding: 2px 8px; border-radius: 8px; gap: 6px; }
-    .nav-name span { font-size: .65rem; color: rgba(77,200,216,.7); letter-spacing: .1em; }
+    .nav-name span { font-size: .65rem; color: var(--navy); letter-spacing: .08em; }
   }
   @media (max-width: 600px) {
     .hero { height: 90vh; }
@@ -322,7 +339,7 @@
     .stats-bar { gap: 0; }
     .stat { min-width: 50%; }
     .cart-panel { max-width: 100vw; width: 100vw; right: -100vw; }
-    .cart-fab { bottom: 16px; right: 16px; padding: 10px 14px; font-size: .85rem; }
+    .cart-fab { bottom: 16px; right: 16px; left: auto; padding: 10px 14px; font-size: .85rem; }
     .cart-fab svg { width: 18px; height: 18px; }
     .cart-wa-btn { padding: 12px 18px; font-size: .9rem; }
   }
@@ -408,7 +425,7 @@
   .drawer-footer-ig:hover { opacity: .88; }
 
   /* ===== CARRITO DE COMPRAS ===== */
-  .cart-fab { position: fixed; bottom: 28px; left: 28px; background: var(--navy); color: #fff;
+  .cart-fab { position: fixed; bottom: 28px; right: 28px; background: var(--navy); color: #fff;
     border: none; border-radius: 50px; padding: 12px 18px; cursor: pointer; font-size: .95rem;
     font-weight: 700; display: flex; align-items: center; gap: 8px; z-index: 999;
     box-shadow: 0 4px 18px rgba(26,58,107,.4); transition: transform .2s, background .2s; }
@@ -489,7 +506,7 @@
   <div class="drawer-header">
     <div class="drawer-logo">
       <img src="la_burbuja-02.png" alt="La Burbuja">
-      <div class="drawer-logo-text">La Burbuja <span>DESDE 1992</span></div>
+      <div class="drawer-logo-text">LA BURBUJA <span>ARTÍCULOS DE LIMPIEZA</span></div>
     </div>
     <button class="drawer-close" onclick="closeDrawer()" aria-label="Cerrar menú">✕</button>
   </div>
@@ -643,17 +660,24 @@
   </div>
 </div>
 
+<div class="top-bar"></div>
+
 <nav class="nav" id="navbar">
   <button class="hamburger-btn" id="hamburgerBtn" onclick="openDrawer()" aria-label="Abrir menú">
     <span></span><span></span><span></span>
   </button>
   <a href="#" class="nav-brand">
     <img src="la_burbuja-02.png" alt="La Burbuja" class="nav-logo">
-    <div class="nav-name">La Burbuja <span>DESDE 1992</span></div>
+    <div class="nav-name">
+      LA BURBUJA <span>ARTÍCULOS DE LIMPIEZA</span>
+      <span class="bubble b1"></span>
+      <span class="bubble b2"></span>
+      <span class="bubble b3"></span>
+    </div>
   </a>
   <div class="nav-links">
-    <a href="#productos" class="nav-link">Productos</a>
-    <a href="#contacto" class="nav-link">Contacto</a>
+    <a href="#productos" class="nav-link nav-link-highlight">Productos</a>
+    <a href="#contacto" class="nav-link nav-link-highlight">Contacto</a>
     <a href="https://www.instagram.com/laburbujatodosuelto.vm" target="_blank" rel="noopener" class="nav-ig">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><defs><linearGradient id="ig1" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#f9a825"/><stop offset="50%" stop-color="#e91e8c"/><stop offset="100%" stop-color="#9c27b0"/></linearGradient></defs><rect x="2" y="2" width="20" height="20" rx="5" ry="5" stroke="url(#ig1)" stroke-width="2" fill="none"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z" stroke="url(#ig1)" stroke-width="2" fill="none"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke="url(#ig1)" stroke-width="2.5" stroke-linecap="round"/></svg>
       <span class="nav-label">Instagram</span>
