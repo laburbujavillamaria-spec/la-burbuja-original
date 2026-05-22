@@ -24,7 +24,7 @@
     --green-wa: #25D366; --radius: 12px; --shadow: 0 4px 20px rgba(26,58,107,.12);
   }
   html { scroll-behavior: smooth; }
-  body { font-family: 'Nunito', sans-serif; background: var(--white); color: #1f2937; overflow-x: hidden; }
+  body { font-family: 'Nunito', sans-serif; background: var(--white); color: #1f2937; }
 
   /* ── TOP BAR ── */
   .top-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 1001;
@@ -342,7 +342,9 @@
     .cart-fab { bottom: 16px; left: 16px; right: auto; padding: 10px 14px; font-size: .85rem; }
     .cart-fab svg { width: 18px; height: 18px; }
     .cart-wa-btn { padding: 12px 18px; font-size: .9rem; }
-    .wa-float { bottom: 16px; right: 16px; }
+    .wa-float { bottom: 24px; right: 24px; width: 52px; height: 52px;
+      animation: none; box-shadow: 0 4px 16px rgba(37,211,102,.4); }
+    .wa-float svg { width: 28px; height: 28px; }
   }
 
   /* ── MARCA LOGOS ── */
