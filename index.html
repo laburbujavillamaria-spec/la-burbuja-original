@@ -1191,7 +1191,7 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
 
   function sendCartToWhatsApp() {
     if(cart.length === 0) return;
-    let msg = 'Hola! Me gustaría consultar por los siguientes productos:\n\n';
+    let msg = 'Hola! Necesito que me hagas un pedido con los siguientes productos:\n\n';
     cart.forEach((item, i) => {
       msg += (i+1) + '. ' + item.name + ' x' + item.qty;
       if(item.cat) msg += ' (' + item.cat + ')';
