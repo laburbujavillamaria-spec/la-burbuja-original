@@ -1191,15 +1191,15 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
 
   function sendCartToWhatsApp() {
     if(cart.length === 0) return;
-    let msg = 'Hola! Me gustaría consultar por los siguientes productos:%0A%0A';
+    let msg = 'Hola! Me gustaría consultar por los siguientes productos:\n\n';
     cart.forEach((item, i) => {
-      msg += (i+1) + '. ' + encodeURIComponent(item.name) + ' x' + item.qty;
-      if(item.cat) msg += ' (' + encodeURIComponent(item.cat) + ')';
-      msg += '%0A';
+      msg += (i+1) + '. ' + item.name + ' x' + item.qty;
+      if(item.cat) msg += ' (' + item.cat + ')';
+      msg += '\n';
     });
-    msg += '%0A¿Me pueden dar precios y disponibilidad? Gracias!';
+    msg += '\n¿Me pueden dar precios y disponibilidad? Gracias!';
     const waNum = '5493534012349';
-    window.open('https://wa.me/' + waNum + '?text=' + msg, '_blank');
+    location.href = 'https://wa.me/' + waNum + '?text=' + encodeURIComponent(msg);
   }
 
   // Product search
