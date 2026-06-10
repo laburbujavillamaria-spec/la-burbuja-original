@@ -216,7 +216,7 @@
   .cat-count { font-size: .75rem; color: var(--gray); font-weight: 600; }
 
   /* ── PRODUCTS SECTION ── */
-  .products-section { padding: 40px 32px; }
+  .products-section { padding: 40px 32px; scroll-margin-top: 160px; }
   .section-header { margin-bottom: 24px; text-align: center; }
   .product-search { max-width: 400px; margin: 0 auto 32px; position: relative; }
   .product-search input { width: 100%; padding: 10px 16px 10px 40px; border: 2px solid rgba(77,200,216,.25);
@@ -1450,7 +1450,14 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
     const c = document.getElementById('navSearch');
     if(val.length > 0) { c.classList.add('has-text'); } else { c.classList.remove('has-text'); }
     if(val.trim().length > 0) {
-      document.querySelector('.products-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      var ps = document.querySelector('.products-section');
+      var vv = window.visualViewport;
+      if (vv && vv.height < screen.height * 0.8) {
+        var top = ps.getBoundingClientRect().top + window.scrollY - 60;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+      } else {
+        ps.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
     }
   }
   function clearNavSearch() {
