@@ -1,0 +1,36 @@
+La Burbuja - Sitio Web (index.html)
+=====================================
+Última actualización: 8/7/2026
+Tamaño: 93.5 KB (1143 líneas)
+
+ESTRUCTURA:
+- head: Meta tags, Open Graph, Google Fonts (Nunito, Playfair Display), CSS completo
+- body:
+  · Side drawer (menú lateral con acordeones)
+  · Floating WhatsApp button
+  · Cart FAB + Cart panel lateral (carrito de compras funcional)
+  · Top announcement bar (marquee animado)
+  · Navbar (fija, con hamburger menu, logo, enlaces, Instagram)
+  · Nav search bar (fija debajo del navbar)
+  · Hero carousel (3 slides: 1 imagen + 2 videos con overlay)
+  · Stats bar (años, productos, envío gratis, atención)
+  · Nosotros sección (grid 2 columnas con features)
+  · Marcas (píldoras con nombres de marcas)
+  · Sidebar de categorías (13 categorías)
+  · Products grid (7+ categorías con productos, cada uno con controles de cantidad + botón "Agregar al carrito")
+  · Contacto (WhatsApp, email, dirección, horarios)
+  · Footer (logo, redes sociales, copyright)
+
+FUNCIONALIDADES (JS):
+- Carousel automático con dots y flechas
+- Scroll reveal animations
+- Carrito de compras con localStorage persistence
+- Búsqueda de productos (filtro en vivo)
+- Búsqueda desde navbar
+- Envío del pedido por WhatsApp
+- Side drawer con acordeones
+- Navbar scroll effect
+- Quantity controls en cada producto
+
+COLORES:
+- Sky (#4DC8D8), Navy (#1A3A6B), Green WA (#25D366)
