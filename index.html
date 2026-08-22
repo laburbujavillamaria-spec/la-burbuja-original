@@ -26,18 +26,11 @@
     html { scroll-behavior: auto; }
   body { font-family: 'Nunito', sans-serif; background: var(--white); color: #1f2937; }
 
-  /* ── INSTAGRAM WEBVIEW: performance overrides ── */
+  /* ── INSTAGRAM WEBVIEW: disable backdrop-filter blur ── */
   .ig-webview .nav { background: rgba(240,248,255,.88); backdrop-filter: none; -webkit-backdrop-filter: none; }
   .ig-webview .nav-search { background: rgba(240,248,255,.92); backdrop-filter: none; -webkit-backdrop-filter: none; }
   .ig-webview .oferta-section::before, .ig-webview .oferta-section::after { filter: none; }
   .ig-webview .oferta-section.near-viewport::before, .ig-webview .oferta-section.near-viewport::after { filter: blur(70px); }
-  .ig-webview .bubble { animation: none !important; }
-  .ig-webview .oferta-badge { animation: none !important; }
-  .ig-webview .oferta-price { animation: none !important; }
-  .ig-webview .oferta-ribbon { animation: none !important; }
-  .ig-webview .wa-float { animation: none !important; }
-  .ig-webview .carousel-slide video { -webkit-mask-image: none !important; mask-image: none !important; }
-  .ig-webview .hero-logo-img { filter: none !important; }
 
   /* ── TOP ANNOUNCEMENT BAR ── */
   .top-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 1001;
@@ -2344,23 +2337,7 @@ if (document.body.classList.contains('ig-webview')) {
     }, { rootMargin: '200px' });
     blurObserver.observe(ofertaSec);
   }
-  // Pause hero videos in IG
-  document.querySelectorAll('.carousel-slide video').forEach(function(v) {
-    v.pause();
-    v.removeAttribute('autoplay');
-  });
 }
-
-// ── PAUSE INTERVALS WHEN TAB NOT VISIBLE ──
-document.addEventListener('visibilitychange', function() {
-  if (document.hidden) {
-    clearInterval(autoPlay);
-    clearInterval(ofertaTimer);
-  } else {
-    startAuto();
-    restartOfertaTimer();
-  }
-});
 
 // ── NAVBAR SCROLL EFFECT ──
 const navbar = document.getElementById('navbar');
