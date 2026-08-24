@@ -2407,7 +2407,7 @@ _allCats.forEach(function(cat) {
   topBtn.addEventListener('click', function() {
     var productsTop = document.getElementById('productos');
     if (!productsTop) return;
-    var y = productsTop.getBoundingClientRect().top + window.scrollY - 70;
+    var y = productsTop.getBoundingClientRect().top + window.scrollY - 200;
     window.scrollTo({ top: y, behavior: 'smooth' });
   });
   actions.appendChild(topBtn);
