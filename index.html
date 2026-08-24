@@ -419,6 +419,12 @@
     font-weight: 600; font-size: .65rem; transition: background .2s; width: fit-content;
     align-self: flex-start; margin-top: auto; }
   .product-card-wa:hover { background: rgba(37,211,102,.2); }
+  .product-card-share { display: flex; align-items: center; gap: 3px; background: rgba(26,58,107,.08);
+    color: var(--navy); padding: 2px 8px; border-radius: 12px; text-decoration: none;
+    font-weight: 600; font-size: .65rem; transition: background .2s; width: fit-content;
+    align-self: flex-start; cursor: pointer; border: none; }
+  .product-card-share:hover { background: rgba(26,58,107,.16); }
+  .product-card-wa-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: auto; }
   .product-card-img { width: 100%; height: 130px; object-fit: contain; border-radius: 8px;
     background: rgba(77,200,216,.04); margin-bottom: 4px; cursor: pointer; transition: opacity .2s; }
   .product-card-img:hover { opacity: .85; }
@@ -3272,6 +3278,43 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       clearAllSearch();
     }
   });
+</script>
+
+<script>
+(function() {
+  var siteUrl = 'https://la-burbuja.vercel.app';
+  document.querySelectorAll('.product-card').forEach(function(card) {
+    var name = card.querySelector('.product-card-name');
+    if (!name) return;
+    var productName = name.textContent.trim();
+    var price = '';
+    var priceEl = card.querySelector('.product-card-price') || card.querySelector('.unit-price');
+    if (priceEl) price = priceEl.textContent.trim();
+    var slug = productName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    var shareUrl = siteUrl + '/' + slug + '.html';
+    var msg = encodeURIComponent('Mirá este producto en La Burbuja:\n\n' + productName + (price ? '\nPrecio: ' + price : '') + '\n\n' + shareUrl);
+    var waUrl = 'https://wa.me/?text=' + msg;
+    var row = card.querySelector('.product-card-wa-row');
+    if (!row) {
+      var waLink = card.querySelector('.product-card-wa');
+      row = document.createElement('div');
+      row.className = 'product-card-wa-row';
+      if (waLink && waLink.parentNode === card) {
+        card.insertBefore(row, waLink);
+        row.appendChild(waLink);
+      } else {
+        card.appendChild(row);
+      }
+    }
+    var btn = document.createElement('a');
+    btn.className = 'product-card-share';
+    btn.href = waUrl;
+    btn.target = '_blank';
+    btn.rel = 'noopener';
+    btn.innerHTML = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Compartir';
+    row.appendChild(btn);
+  });
+})();
 </script>
 
 <!-- LIGHTBOX -->
