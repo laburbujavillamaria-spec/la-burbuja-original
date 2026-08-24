@@ -32,6 +32,12 @@
   .ig-webview .oferta-section::before, .ig-webview .oferta-section::after { filter: none; }
   .ig-webview .oferta-section.near-viewport::before, .ig-webview .oferta-section.near-viewport::after { filter: blur(70px); }
 
+  /* ── ACCORDION MODE: only show active category ── */
+  .product-category { display: none !important; }
+  .product-category.ig-active { display: block !important; }
+  .ig-searching .product-category { display: block !important; }
+  .ig-searching .product-category.search-hidden { display: none !important; }
+
   /* ── TOP ANNOUNCEMENT BAR ── */
   .top-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 1001;
     height: 34px; background: var(--navy); overflow: hidden;
@@ -2326,7 +2332,7 @@
 // ── INSTAGRAM WEBVIEW DETECTION ──
 if (/Instagram/i.test(navigator.userAgent)) document.body.classList.add('ig-webview');
 
-// ── LAZY BLUR: enable blur on oferta-section only when near viewport (IG only) ──
+// ── INSTAGRAM: lazy blur ──
 if (document.body.classList.contains('ig-webview')) {
   var ofertaSec = document.querySelector('.oferta-section');
   if (ofertaSec) {
@@ -2338,6 +2344,32 @@ if (document.body.classList.contains('ig-webview')) {
     blurObserver.observe(ofertaSec);
   }
 }
+
+// ── ACCORDION: only show active category (all browsers) ──
+var _igAllCats = document.querySelectorAll('.product-category');
+var _igActiveCat = document.getElementById('cat-liquidos');
+if (_igActiveCat) _igActiveCat.classList.add('ig-active');
+document.querySelectorAll('.cat-item').forEach(function(tab) {
+  tab.addEventListener('click', function(e) {
+    e.preventDefault();
+    var target = document.getElementById(this.getAttribute('href').substring(1));
+    if (!target) return;
+    _igAllCats.forEach(function(c) { c.classList.remove('ig-active'); });
+    target.classList.add('ig-active');
+    document.querySelectorAll('.cat-item').forEach(function(t) { t.classList.remove('active'); });
+    this.classList.add('active');
+    window.scrollTo({ top: target.offsetTop - 140, behavior: 'smooth' });
+  });
+});
+// Accordion toggle for search
+var _igSearchInput = document.getElementById('productSearchInput');
+var _igNavSearchInput = document.getElementById('navSearchInput');
+function _igToggleSearch() {
+  var val = (_igSearchInput ? _igSearchInput.value : '') || (_igNavSearchInput ? _igNavSearchInput.value : '');
+  document.body.classList.toggle('ig-searching', val.trim().length > 0);
+}
+if (_igSearchInput) _igSearchInput.addEventListener('input', _igToggleSearch);
+if (_igNavSearchInput) _igNavSearchInput.addEventListener('input', _igToggleSearch);
 
 // ── NAVBAR SCROLL EFFECT ──
 const navbar = document.getElementById('navbar');
@@ -3012,6 +3044,7 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
   function clearSearch() {
     document.getElementById('productSearchInput').value = '';
     document.querySelector('.product-search').classList.remove('has-text');
+    document.body.classList.remove('ig-searching');
     filterProducts('');
     document.getElementById('productSearchInput').blur();
   }
