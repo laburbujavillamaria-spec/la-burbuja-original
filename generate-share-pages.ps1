@@ -1,5 +1,5 @@
 $html = Get-Content "C:\Users\mili_\Downloads\Nueva carpeta\index.html" -Raw -Encoding UTF8
-$siteUrl = "https://la-burbuja.vercel.app"
+$siteUrl = "https://laburbujavm.vercel.app"
 $outDir = "C:\Users\mili_\Downloads\Nueva carpeta\p"
 
 # Remove old files first
