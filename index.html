@@ -45,13 +45,14 @@
   .ig-searching .product-category.search-hidden { display: none; }
   .cat-toggle-btn {
     display: inline-flex; align-items: center; gap: 6px;
-    margin-top: 10px; padding: 8px 18px; border: 2px solid var(--sky);
-    border-radius: 20px; background: transparent; color: var(--sky);
-    font-family: 'Nunito', sans-serif; font-size: .85rem; font-weight: 700;
-    cursor: pointer; transition: all .2s;
+    padding: 8px 16px; border-radius: 20px; border: none;
+    background: var(--sky); color: #fff;
+    font-family: 'Nunito', sans-serif; font-size: .82rem; font-weight: 700;
+    cursor: pointer; transition: opacity .2s, transform .2s; white-space: nowrap;
   }
-  .cat-toggle-btn:hover { background: var(--sky); color: #fff; }
+  .cat-toggle-btn:hover { opacity: .88; transform: scale(1.03); }
   .cat-toggle-btn svg { width: 14px; height: 14px; }
+  } /* end accordion media query */
 
   /* ── TOP ANNOUNCEMENT BAR ── */
   .top-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 1001;
@@ -367,16 +368,18 @@
     content-visibility: auto; contain-intrinsic-block-size: 600px; }
   .category-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px;
     padding: 16px; border-bottom: 2px solid rgba(77,200,216,.2);
-    background: rgba(77,200,216,.07); border-radius: 12px 12px 0 0; }
+    background: rgba(77,200,216,.07); border-radius: 12px 12px 0 0; flex-wrap: wrap; }
   .category-header img { width: 56px; height: 56px; border-radius: 12px; object-fit: cover; }
+  .category-header-info { flex: 1 1 100%; }
   .category-header-info h3 { font-size: 1.2rem; font-weight: 800; color: var(--navy); }
   .category-header-info p { font-size: .85rem; color: var(--gray); }
-  .category-wa-btn { margin-left: auto; display: flex; align-items: center; gap: 6px;
+  .category-header-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; width: 100%; }
+  .category-wa-btn { display: flex; align-items: center; gap: 6px;
     background: var(--green-wa); color: #fff; padding: 8px 16px; border-radius: 20px;
-    text-decoration: none; font-weight: 700; font-size: .82rem; transition: opacity .2s, transform .2s; }
+    text-decoration: none; font-weight: 700; font-size: .82rem; transition: opacity .2s, transform .2s; white-space: nowrap; }
   .category-wa-btn:hover { opacity: .88; transform: scale(1.03); }
   .category-top-btn { flex-shrink: 0; display: flex; align-items: center; justify-content: center;
-    width: 38px; height: 38px; border-radius: 50%; border: 2px solid rgba(77,200,216,.4);
+    width: 36px; height: 36px; border-radius: 50%; border: 2px solid rgba(77,200,216,.4);
     background: #fff; color: var(--navy); cursor: pointer; padding: 0;
     box-shadow: 0 3px 10px rgba(26,58,107,.14);
     transition: background .2s, color .2s, border-color .2s, transform .2s; }
@@ -540,9 +543,12 @@
     .product-card-img { height: 145px; }
     .product-card-gallery { height: 145px; }
     .product-card-gallery .gallery-slide { height: 145px; }
-    .category-header { flex-wrap: wrap; padding: 12px; gap: 10px; }
-    .category-wa-btn { padding: 6px 12px; font-size: .75rem; }
-    .category-top-btn { width: 34px; height: 34px; }
+    .category-header { padding: 12px; gap: 10px; }
+    .category-header-info { flex: 1 1 100%; }
+    .category-header-actions { gap: 8px; }
+    .category-wa-btn { padding: 8px 14px; font-size: .78rem; }
+    .cat-toggle-btn { padding: 8px 14px; font-size: .78rem; }
+    .category-top-btn { width: 36px; height: 36px; }
     .hero { margin-top: 148px; }
     .carousel-content { padding: 0 5%; }
     .nav-links .nav-link { display: none; }
@@ -2360,12 +2366,20 @@ if (document.body.classList.contains('ig-webview')) {
   }
 }
 
-// ── ACCORDION: expand/collapse categories (all browsers) ──
+// ── ACCORDION: expand/collapse categories (mobile only) ──
+if (window.innerWidth <= 900) {
 var _allCats = document.querySelectorAll('.product-category');
-// Inject toggle buttons into each category header
+// Create actions wrapper and move WA button + inject toggle + top btn
 _allCats.forEach(function(cat) {
   var header = cat.querySelector('.category-header');
   if (!header) return;
+  // Create wrapper
+  var actions = document.createElement('div');
+  actions.className = 'category-header-actions';
+  // Move existing WA btn into wrapper
+  var waBtn = header.querySelector('.category-wa-btn');
+  if (waBtn) actions.appendChild(waBtn);
+  // Inject toggle button
   var btn = document.createElement('button');
   btn.className = 'cat-toggle-btn';
   btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg> Desplegar productos';
@@ -2375,9 +2389,23 @@ _allCats.forEach(function(cat) {
     btn.innerHTML = isOpen
       ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 15l-6-6-6 6"/></svg> Contraer categoría'
       : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg> Desplegar productos';
-    if (isOpen) cat.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
-  header.appendChild(btn);
+  actions.appendChild(btn);
+  // Scroll-to-top button
+  var topBtn = document.createElement('button');
+  topBtn.type = 'button';
+  topBtn.className = 'category-top-btn';
+  topBtn.setAttribute('aria-label', 'Volver al inicio de los productos');
+  topBtn.setAttribute('title', 'Volver arriba');
+  topBtn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
+  topBtn.addEventListener('click', function() {
+    var productsTop = document.getElementById('productos');
+    if (!productsTop) return;
+    var y = productsTop.getBoundingClientRect().top + window.scrollY - 70;
+    window.scrollTo({ top: y, behavior: 'smooth' });
+  });
+  actions.appendChild(topBtn);
+  header.appendChild(actions);
 });
 // Sidebar tab clicks expand the category
 document.querySelectorAll('.cat-item').forEach(function(tab) {
@@ -2405,6 +2433,26 @@ function _igToggleSearch() {
 }
 if (_igSearchInput) _igSearchInput.addEventListener('input', _igToggleSearch);
 if (_igNavSearchInput) _igNavSearchInput.addEventListener('input', _igToggleSearch);
+} else {
+  // Desktop: keep top btns in headers
+  (function initCategoryTopBtns() {
+    var productsTop = document.getElementById('productos');
+    document.querySelectorAll('.category-header').forEach(function(header) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'category-top-btn';
+      btn.setAttribute('aria-label', 'Volver al inicio de los productos');
+      btn.setAttribute('title', 'Volver arriba');
+      btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
+      btn.addEventListener('click', function() {
+        if (!productsTop) return;
+        var y = productsTop.getBoundingClientRect().top + window.scrollY - 70;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      });
+      header.appendChild(btn);
+    });
+  })();
+}
 
 // ── NAVBAR SCROLL EFFECT ──
 const navbar = document.getElementById('navbar');
@@ -2659,25 +2707,6 @@ function setOfertaVariant(slide, vi) {
 }
 
 buildOfertaCarousel();
-
-// ── BOTÓN VOLVER AL INICIO DE PRODUCTOS ──
-(function initCategoryTopBtns() {
-  const productsTop = document.getElementById('productos');
-  document.querySelectorAll('.category-header').forEach(function(header) {
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'category-top-btn';
-    btn.setAttribute('aria-label', 'Volver al inicio de los productos');
-    btn.setAttribute('title', 'Volver arriba');
-    btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
-    btn.addEventListener('click', function() {
-      if (!productsTop) return;
-      const y = productsTop.getBoundingClientRect().top + window.scrollY - 70;
-      window.scrollTo({ top: y, behavior: 'smooth' });
-    });
-    header.appendChild(btn);
-  });
-})();
 
 // ── SIDE DRAWER ──
 function openDrawer() {
