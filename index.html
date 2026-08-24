@@ -245,6 +245,9 @@
     opacity: 0; transform: scale(.96) translateY(12px); pointer-events: none;
     transition: opacity .7s ease, transform .7s ease; padding: 6px 14px; }
   .oferta-slide.active { opacity: 1; transform: scale(1) translateY(0); pointer-events: auto; }
+  .oferta-slide:not(.active) .oferta-badge,
+  .oferta-slide:not(.active) .oferta-price,
+  .oferta-slide:not(.active) .oferta-ribbon { animation: none; }
   .oferta-img { width: 100%; max-width: 400px; height: 300px; object-fit: contain;
     border-radius: 20px; background: #fff; padding: 16px;
     border: 3px solid #fff;
@@ -368,12 +371,12 @@
     content-visibility: auto; contain-intrinsic-block-size: 600px; }
   .category-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px;
     padding: 16px; border-bottom: 2px solid rgba(77,200,216,.2);
-    background: rgba(77,200,216,.07); border-radius: 12px 12px 0 0; flex-wrap: wrap; }
+    background: rgba(77,200,216,.07); border-radius: 12px 12px 0 0; }
   .category-header img { width: 56px; height: 56px; border-radius: 12px; object-fit: cover; }
-  .category-header-info { flex: 1 1 100%; }
+  .category-header-info { flex: 1; min-width: 0; }
   .category-header-info h3 { font-size: 1.2rem; font-weight: 800; color: var(--navy); }
   .category-header-info p { font-size: .85rem; color: var(--gray); }
-  .category-header-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; width: 100%; }
+  .category-header-actions { display: flex; align-items: center; gap: 8px; margin-left: auto; flex-shrink: 0; }
   .category-wa-btn { display: flex; align-items: center; gap: 6px;
     background: var(--green-wa); color: #fff; padding: 8px 16px; border-radius: 20px;
     text-decoration: none; font-weight: 700; font-size: .82rem; transition: opacity .2s, transform .2s; white-space: nowrap; }
@@ -387,10 +390,10 @@
     transform: scale(1.08); }
   .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
   .product-card { background: #fff; border: 2px solid rgba(77,200,216,.35); outline: none;
-  .product-card:focus { border-color: #1A3A6B; box-shadow: 0 0 0 3px rgba(26,58,107,.2); }
     border-radius: var(--radius); padding: 12px 12px; transition: transform .25s, box-shadow .25s;
     display: flex; flex-direction: column; gap: 6px; box-shadow: 0 2px 8px rgba(77,200,216,.08);
     contain: layout style; }
+  .product-card:focus { border-color: #1A3A6B; box-shadow: 0 0 0 3px rgba(26,58,107,.2); }
   .product-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
   .product-card-name { font-weight: 900; font-size: .85rem; color: var(--navy); line-height: 1.3;
     text-align: center; letter-spacing: .01em; text-transform: uppercase;
@@ -543,9 +546,9 @@
     .product-card-img { height: 145px; }
     .product-card-gallery { height: 145px; }
     .product-card-gallery .gallery-slide { height: 145px; }
-    .category-header { padding: 12px; gap: 10px; }
+    .category-header { padding: 12px; gap: 10px; flex-wrap: wrap; }
     .category-header-info { flex: 1 1 100%; }
-    .category-header-actions { gap: 8px; }
+    .category-header-actions { gap: 8px; width: 100%; }
     .category-wa-btn { padding: 8px 14px; font-size: .78rem; }
     .cat-toggle-btn { padding: 8px 14px; font-size: .78rem; }
     .category-top-btn { width: 36px; height: 36px; }
@@ -562,7 +565,8 @@
     .nav-name span { font-size: .65rem; color: var(--navy); letter-spacing: .08em; }
     .nav-search { top: 102px; display: flex; }
     .nav-search input { font-size: .82rem; padding: 7px 32px 7px 12px; }
-    .nav, .nav-search { will-change: transform; }
+    .nav { background: rgba(240,248,255,.92); backdrop-filter: none; -webkit-backdrop-filter: none; }
+    .nav-search { background: rgba(240,248,255,.95); backdrop-filter: none; -webkit-backdrop-filter: none; }
   }
   @media (max-width: 600px) {
     .hero { height: 90vh; }
@@ -1070,13 +1074,13 @@
       <div class="carousel-overlay"></div>
     </div>
     <div class="carousel-slide">
-      <video class="carousel-video" muted autoplay loop playsinline preload="auto" poster="la_burbuja-02.png">
+      <video class="carousel-video" muted loop playsinline preload="metadata" poster="la_burbuja-02.png">
         <source src="Video%20para%20carousel%20burbuja.mp4" type="video/mp4">
       </video>
       <div class="carousel-overlay" style="background: linear-gradient(135deg, rgba(26,58,107,.6), rgba(77,200,216,.25));"></div>
     </div>
     <div class="carousel-slide">
-      <video class="carousel-video" muted autoplay loop playsinline preload="auto" poster="la_burbuja-02.png">
+      <video class="carousel-video" muted loop playsinline preload="metadata" poster="la_burbuja-02.png">
         <source src="Video%20para%20carousel%20burbuja%202.mp4" type="video/mp4">
       </video>
       <div class="carousel-overlay" style="background: linear-gradient(135deg, rgba(26,58,107,.6), rgba(77,200,216,.25));"></div>
@@ -2496,7 +2500,18 @@ dots.forEach(dot => {
   dot.addEventListener('click', () => {
     clearInterval(autoPlay);
     goTo(parseInt(dot.dataset.idx));
+startAuto();
+
+// ── PAUSE INTERVALS WHEN TAB NOT VISIBLE ──
+document.addEventListener('visibilitychange', function() {
+  if (document.hidden) {
+    clearInterval(autoPlay);
+    clearInterval(ofertaTimer);
+  } else {
     startAuto();
+    restartOfertaTimer();
+  }
+});
   });
 });
 startAuto();
@@ -3136,6 +3151,9 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
     const inp = document.getElementById('productSearchInput');
     filterProducts(inp.value);
     inp.blur();
+    if(inp.value.trim().length > 0) {
+      document.querySelector('.products-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }
 
   // Close cart with Escape
