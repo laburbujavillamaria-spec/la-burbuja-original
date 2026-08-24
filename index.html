@@ -3291,7 +3291,7 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
     var priceEl = card.querySelector('.product-card-price') || card.querySelector('.unit-price');
     if (priceEl) price = priceEl.textContent.trim();
     var slug = productName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-    var shareUrl = siteUrl + '/' + slug + '.html';
+    var shareUrl = siteUrl + '/p/' + slug + '.html';
     var msg = encodeURIComponent('Mirá este producto en La Burbuja:\n\n' + productName + (price ? '\nPrecio: ' + price : '') + '\n\n' + shareUrl);
     var waUrl = 'https://wa.me/?text=' + msg;
     var row = card.querySelector('.product-card-wa-row');

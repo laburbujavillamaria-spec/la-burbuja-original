@@ -44,7 +44,7 @@ foreach ($cm in $catMatches) {
         $escapedName = $name -replace '"', '&quot;' -replace '&', '&amp;'
         $escapedDesc = if ($price) { "Precio: $price - Encontra este y muchos mas productos de limpieza en La Burbuja." } else { "Encontra este y muchos mas productos de limpieza en La Burbuja." }
         $escapedDesc = $escapedDesc -replace '"', '&quot;'
-        $pageUrl = "$siteUrl/$slug.html"
+        $pageUrl = "$siteUrl/p/$slug.html"
         $catUrl = "$siteUrl/#$catId"
         
         $sb = New-Object System.Text.StringBuilder
