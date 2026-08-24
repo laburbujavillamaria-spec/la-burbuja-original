@@ -32,11 +32,26 @@
   .ig-webview .oferta-section::before, .ig-webview .oferta-section::after { filter: none; }
   .ig-webview .oferta-section.near-viewport::before, .ig-webview .oferta-section.near-viewport::after { filter: blur(70px); }
 
-  /* ── ACCORDION MODE: only show active category ── */
-  .product-category { display: none !important; }
-  .product-category.ig-active { display: block !important; }
-  .ig-searching .product-category { display: block !important; }
-  .ig-searching .product-category.search-hidden { display: none !important; }
+  /* ── ACCORDION TOGGLE BUTTON (always) ── */
+  .cat-toggle-btn {
+    display: none;
+  }
+
+  @media (max-width: 900px) {
+  /* ── ACCORDION: category headers always visible, products hidden ── */
+  .product-category .products-grid { display: none; }
+  .product-category.cat-open .products-grid { display: grid; }
+  .ig-searching .product-category .products-grid { display: grid; }
+  .ig-searching .product-category.search-hidden { display: none; }
+  .cat-toggle-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-top: 10px; padding: 8px 18px; border: 2px solid var(--sky);
+    border-radius: 20px; background: transparent; color: var(--sky);
+    font-family: 'Nunito', sans-serif; font-size: .85rem; font-weight: 700;
+    cursor: pointer; transition: all .2s;
+  }
+  .cat-toggle-btn:hover { background: var(--sky); color: #fff; }
+  .cat-toggle-btn svg { width: 14px; height: 14px; }
 
   /* ── TOP ANNOUNCEMENT BAR ── */
   .top-bar { position: fixed; top: 0; left: 0; right: 0; z-index: 1001;
@@ -2345,23 +2360,43 @@ if (document.body.classList.contains('ig-webview')) {
   }
 }
 
-// ── ACCORDION: only show active category (all browsers) ──
-var _igAllCats = document.querySelectorAll('.product-category');
-var _igActiveCat = document.getElementById('cat-liquidos');
-if (_igActiveCat) _igActiveCat.classList.add('ig-active');
+// ── ACCORDION: expand/collapse categories (all browsers) ──
+var _allCats = document.querySelectorAll('.product-category');
+// Inject toggle buttons into each category header
+_allCats.forEach(function(cat) {
+  var header = cat.querySelector('.category-header');
+  if (!header) return;
+  var btn = document.createElement('button');
+  btn.className = 'cat-toggle-btn';
+  btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg> Desplegar productos';
+  btn.addEventListener('click', function() {
+    cat.classList.toggle('cat-open');
+    var isOpen = cat.classList.contains('cat-open');
+    btn.innerHTML = isOpen
+      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 15l-6-6-6 6"/></svg> Contraer categoría'
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg> Desplegar productos';
+    if (isOpen) cat.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+  header.appendChild(btn);
+});
+// Sidebar tab clicks expand the category
 document.querySelectorAll('.cat-item').forEach(function(tab) {
   tab.addEventListener('click', function(e) {
     e.preventDefault();
-    var target = document.getElementById(this.getAttribute('href').substring(1));
+    var targetId = this.getAttribute('href').substring(1);
+    var target = document.getElementById(targetId);
     if (!target) return;
-    _igAllCats.forEach(function(c) { c.classList.remove('ig-active'); });
-    target.classList.add('ig-active');
     document.querySelectorAll('.cat-item').forEach(function(t) { t.classList.remove('active'); });
     this.classList.add('active');
+    if (!target.classList.contains('cat-open')) {
+      target.classList.add('cat-open');
+      var btn = target.querySelector('.cat-toggle-btn');
+      if (btn) btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 15l-6-6-6 6"/></svg> Contraer categoría';
+    }
     window.scrollTo({ top: target.offsetTop - 140, behavior: 'smooth' });
   });
 });
-// Accordion toggle for search
+// Search toggle: expand all matching categories
 var _igSearchInput = document.getElementById('productSearchInput');
 var _igNavSearchInput = document.getElementById('navSearchInput');
 function _igToggleSearch() {
