@@ -41,7 +41,6 @@
   /* ── ACCORDION: category headers always visible, products hidden ── */
   .product-category .products-grid { display: none; }
   .product-category.cat-open .products-grid { display: grid; }
-  .ig-searching .product-category .products-grid { display: grid; }
   .ig-searching .product-category.search-hidden { display: none; }
   .cat-toggle-btn {
     display: inline-flex; align-items: center; gap: 6px;
@@ -2427,10 +2426,11 @@ document.querySelectorAll('.cat-item').forEach(function(tab) {
       var btn = target.querySelector('.cat-toggle-btn');
       if (btn) btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 15l-6-6-6 6"/></svg> Contraer categoría';
     }
-    window.scrollTo({ top: target.offsetTop - 140, behavior: 'smooth' });
+    requestAnimationFrame(function() {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
   });
 });
-// Search toggle: expand all matching categories
 var _igSearchInput = document.getElementById('productSearchInput');
 var _igNavSearchInput = document.getElementById('navSearchInput');
 function _igToggleSearch() {
@@ -3113,13 +3113,24 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       }
     });
 
-    // Hide empty categories
+    // Hide empty categories + toggle accordion during search
     _cachedCats.forEach(cat => {
       const visible = cat.querySelectorAll('.product-card:not(.search-hidden)').length;
       if(visible === 0 && q.length > 0) {
         cat.classList.add('search-hidden');
+        cat.classList.remove('cat-open');
       } else {
         cat.classList.remove('search-hidden');
+        if(q.length > 0 && visible > 0) {
+          cat.classList.add('cat-open');
+          var btn = cat.querySelector('.cat-toggle-btn');
+          if(btn) btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 15l-6-6-6 6"/></svg> Contraer categoría';
+        }
+        if(q.length === 0) {
+          cat.classList.remove('cat-open');
+          var btn = cat.querySelector('.cat-toggle-btn');
+          if(btn) btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg> Desplegar productos';
+        }
       }
     });
 
@@ -3128,7 +3139,9 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
 
   function clearSearch() {
     document.getElementById('productSearchInput').value = '';
+    document.getElementById('navSearchInput').value = '';
     document.querySelector('.product-search').classList.remove('has-text');
+    document.getElementById('navSearch').classList.remove('has-text');
     document.body.classList.remove('ig-searching');
     filterProducts('');
     document.getElementById('productSearchInput').blur();
@@ -3137,9 +3150,11 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
   // Nav search
   function navSearch() {
     const inp = document.getElementById('navSearchInput');
+    document.getElementById('productSearchInput').value = inp.value;
     filterProducts(inp.value);
     const c = document.getElementById('navSearch');
-    if(inp.value.length > 0) { c.classList.add('has-text'); } else { c.classList.remove('has-text'); }
+    const pc = document.querySelector('.product-search');
+    if(inp.value.length > 0) { c.classList.add('has-text'); pc.classList.add('has-text'); } else { c.classList.remove('has-text'); pc.classList.remove('has-text'); }
     inp.blur();
     if(inp.value.trim().length > 0) {
       document.querySelector('.products-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -3147,7 +3162,10 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
   }
   function clearNavSearch() {
     document.getElementById('navSearchInput').value = '';
+    document.getElementById('productSearchInput').value = '';
     document.getElementById('navSearch').classList.remove('has-text');
+    document.querySelector('.product-search').classList.remove('has-text');
+    document.body.classList.remove('ig-searching');
     filterProducts('');
     document.getElementById('navSearchInput').blur();
   }
@@ -3155,7 +3173,10 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
   // Product search
   function productSearch() {
     const inp = document.getElementById('productSearchInput');
+    document.getElementById('navSearchInput').value = inp.value;
     filterProducts(inp.value);
+    const c = document.getElementById('navSearch');
+    if(inp.value.length > 0) { c.classList.add('has-text'); } else { c.classList.remove('has-text'); }
     inp.blur();
     if(inp.value.trim().length > 0) {
       document.querySelector('.products-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
