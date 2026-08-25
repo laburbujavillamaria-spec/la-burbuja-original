@@ -3294,7 +3294,7 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
     card.id = 'p-' + slug;
     var directUrl = siteUrl + '/#p-' + slug;
     var sharePageUrl = siteUrl + '/p/' + slug + '.html';
-    var msg = encodeURIComponent('Mirá este producto en La Burbuja:\n\n' + productName + (price ? '\nPrecio: ' + price : '') + '\n\n' + directUrl);
+    var msg = encodeURIComponent('Mirá este producto en La Burbuja:\n\n' + productName + (price ? '\nPrecio: ' + price : '') + '\n\n' + sharePageUrl);
     var waUrl = 'https://wa.me/?text=' + msg;
     var row = card.querySelector('.product-card-wa-row');
     if (!row) {
