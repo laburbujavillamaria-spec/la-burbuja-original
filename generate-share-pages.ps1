@@ -46,6 +46,7 @@ foreach ($cm in $catMatches) {
         $escapedDesc = $escapedDesc -replace '"', '&quot;'
         $pageUrl = "$siteUrl/p/$slug.html"
         $catUrl = "$siteUrl/#$catId"
+        $productUrl = "$siteUrl/#p-$slug"
         
         $sb = New-Object System.Text.StringBuilder
         [void]$sb.AppendLine('<!DOCTYPE html>')
@@ -63,8 +64,8 @@ foreach ($cm in $catMatches) {
         [void]$sb.AppendLine("<meta name=`"twitter:title`" content=`"$escapedTitle`">")
         [void]$sb.AppendLine("<meta name=`"twitter:description`" content=`"$escapedDesc`">")
         [void]$sb.AppendLine("<meta name=`"twitter:image`" content=`"$absImgForOg`">")
-        [void]$sb.AppendLine("<meta http-equiv=`"refresh`" content=`"0;url=$catUrl`">")
-        [void]$sb.AppendLine("<link rel=`"canonical`" href=`"$catUrl`">")
+        [void]$sb.AppendLine("<meta http-equiv=`"refresh`" content=`"0;url=$productUrl`">")
+        [void]$sb.AppendLine("<link rel=`"canonical`" href=`"$productUrl`">")
         [void]$sb.AppendLine('<style>body{font-family:sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;background:#f0f8ff;color:#1A3A6B;text-align:center}a{color:#4DC8D8}img{max-width:200px;border-radius:12px;margin-bottom:16px;box-shadow:0 4px 16px rgba(0,0,0,.15)}</style>')
         [void]$sb.AppendLine('</head>')
         [void]$sb.AppendLine('<body>')
@@ -72,7 +73,7 @@ foreach ($cm in $catMatches) {
         [void]$sb.AppendLine("<img src=`"$absImgForOg`" alt=`"$escapedName`">")
         [void]$sb.AppendLine("<h2>$escapedName</h2>")
         if ($price) { [void]$sb.AppendLine("<p><strong>$price</strong></p>") }
-        [void]$sb.AppendLine("<p>Redirigiendo a <a href=`"$catUrl`">La Burbuja</a>...</p>")
+        [void]$sb.AppendLine("<p>Redirigiendo a <a href=`"$productUrl`">La Burbuja</a>...</p>")
         [void]$sb.AppendLine('</div>')
         [void]$sb.AppendLine('</body>')
         [void]$sb.AppendLine('</html>')

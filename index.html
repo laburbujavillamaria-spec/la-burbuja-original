@@ -3291,8 +3291,10 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
     var priceEl = card.querySelector('.product-card-price') || card.querySelector('.unit-price');
     if (priceEl) price = priceEl.textContent.trim();
     var slug = productName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-    var shareUrl = siteUrl + '/p/' + slug + '.html';
-    var msg = encodeURIComponent('Mirá este producto en La Burbuja:\n\n' + productName + (price ? '\nPrecio: ' + price : '') + '\n\n' + shareUrl);
+    card.id = 'p-' + slug;
+    var directUrl = siteUrl + '/#p-' + slug;
+    var sharePageUrl = siteUrl + '/p/' + slug + '.html';
+    var msg = encodeURIComponent('Mirá este producto en La Burbuja:\n\n' + productName + (price ? '\nPrecio: ' + price : '') + '\n\n' + directUrl);
     var waUrl = 'https://wa.me/?text=' + msg;
     var row = card.querySelector('.product-card-wa-row');
     if (!row) {
@@ -3314,6 +3316,33 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
     btn.innerHTML = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> Compartir';
     row.appendChild(btn);
   });
+  var hash = window.location.hash;
+  if (hash && hash.indexOf('#p-') === 0) {
+    var target = document.getElementById(hash.substring(1));
+    if (target) {
+      var cat = target.closest('.product-category');
+      if (cat && !cat.classList.contains('cat-open')) {
+        cat.classList.add('cat-open');
+      }
+      if (cat) {
+        var sidebarItem = document.querySelector('.cat-item[data-cat="' + cat.id + '"]');
+        if (sidebarItem) {
+          document.querySelectorAll('.cat-item').forEach(function(c){c.classList.remove('active')});
+          sidebarItem.classList.add('active');
+        }
+      }
+      setTimeout(function() {
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        target.style.transition = 'box-shadow .4s, border-color .4s';
+        target.style.boxShadow = '0 0 0 4px #4DC8D8, 0 8px 32px rgba(77,200,216,.4)';
+        target.style.borderColor = '#4DC8D8';
+        setTimeout(function() {
+          target.style.boxShadow = '';
+          target.style.borderColor = '';
+        }, 3000);
+      }, 300);
+    }
+  }
 })();
 </script>
 
