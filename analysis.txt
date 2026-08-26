@@ -1,0 +1,32 @@
+palito+economica in HTML: False
+Baño escobillon refs: 0
+Total escobillon refs: 37
+Total Trapos refs: 14
+
+=== VERIFICATION OF EACH FLAGGED ITEM ===
+[MISSING] Baño/Escobilla wc con vaso redondo samantha.jpeg
+[MISSING] Baño/Escobillon para inodoro palito economica.jpeg
+[MISSING] ceras y curadores/CERA 8M CLASICA X5LT.jpeg
+[MISSING] Cocina y hogar/bolsa de agua caliente atucha sin funda.jpeg
+[MISSING] Cocina y hogar/bolsa de agua caliente mapa.jpeg
+[MISSING] Cocina y hogar/bolsa de agua caliente nexxo china con funda.jpeg
+[MISSING] Cocina y hogar/eccole pegamento.jpeg
+[MISSING] Cocina y hogar/la gotita comun pegamento.jpeg
+[MISSING] Cocina y hogar/la gotita en gel pegamento.jpeg
+[MISSING] escobillones y cepillos/cepillo lava coche cadera art 1439 OFERTA.jpeg
+[MISSING] escobillones y cepillos/cepillo lava zapatillas scotch brite.jpeg
+[MISSING] escobillones y cepillos/Cepillo para auto bainotti. Codigo 41.jpeg
+[MISSING] escobillones y cepillos/Cepillo para auto lucero con base de madera.jpeg
+[MISSING] escobillones y cepillos/Cepillo para calzado de cerda Samantha.jpeg
+[MISSING] escobillones y cepillos/Cepillo Piso 30 Xper.jpeg
+[MISSING] escobillones y cepillos/Cepillo salzano lava camion.jpeg
+[MISSING] escobillones y cepillos/Cepillo salzano lavacoche. Violin o Hidroviolin (2).jpeg
+[MISSING] escobillones y cepillos/Cepillo salzano lavacoche. Violin o Hidroviolin.jpeg
+[MISSING] escobillones y cepillos/cepillo salzano para ropa.jpeg
+[MISSING] escobillones y cepillos/Lava camion grande economico.jpeg
+[MISSING] escobillones y cepillos/Salzano cepillo lava zapatillas con mango.jpeg
+[MISSING] guantes/guantes de latex industrial dps negro.jpeg
+[MISSING] guantes/guantes dps para combustible azul y naranja.jpeg
+[MISSING] Trapos y rejillas/rejilla marilu art 096.jpeg
+[MISSING] limpia vidrios/LIMPA VIDRIOS 360.xlsx
+[MISSING] Liquidos/ACIDO MURIATICO X5LT.jpg
