@@ -3470,7 +3470,7 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
     lb.classList.add('open');
     document.body.style.overflow = 'hidden';
     var hd = src
-      .replace(/^productos\//i, 'productos_hd/')
+      .replace(/(^|\/)productos\//i, '$1productos_hd/')
       .replace(/\.(png|jpe?g|webp|gif|bmp|jfif|tiff)$/i, '.jpg');
     if (hd !== src) {
       var probe = new Image();
