@@ -2646,21 +2646,16 @@ window.addEventListener('scroll', () => {
   navbar.classList.toggle('scrolled', window.scrollY > 40);
 }, { passive: true });
 
-// ── FLOATING CART FAB: auto-hide while scrolling down so it doesn't cover product buttons ──
-(function() {
+// ── FLOATING CART FAB: always visible except when the cart panel is open (so it never covers the "vaciar carrito" button) ──
+function ctrlCartFab(visible) {
   const fab = document.getElementById('cartFab');
   if (!fab) return;
-  let lastY = window.scrollY;
-  window.addEventListener('scroll', () => {
-    const y = window.scrollY;
-    if (y > lastY && y > 120 && !fab.classList.contains('fab-hidden')) {
-      fab.classList.add('fab-hidden');
-    } else if (y <= lastY && fab.classList.contains('fab-hidden')) {
-      fab.classList.remove('fab-hidden');
-    }
-    lastY = y;
-  }, { passive: true });
-})();
+  if (visible) {
+    fab.classList.remove('fab-hidden');
+  } else {
+    fab.classList.add('fab-hidden');
+  }
+}
 
 // ── HERO CAROUSEL ──
 const slides = document.querySelectorAll('.carousel-slide');
@@ -3028,6 +3023,7 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
     document.getElementById('cartPanel').classList.add('open');
     document.getElementById('cartOverlay').classList.add('open');
     document.body.style.overflow = 'hidden';
+    ctrlCartFab(false);
     renderCart();
   }
 
@@ -3035,6 +3031,7 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
     document.getElementById('cartPanel').classList.remove('open');
     document.getElementById('cartOverlay').classList.remove('open');
     document.body.style.overflow = '';
+    ctrlCartFab(true);
   }
 
   function updateQty(el, delta) {
