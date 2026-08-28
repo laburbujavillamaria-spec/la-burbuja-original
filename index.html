@@ -546,6 +546,14 @@
     display: flex; align-items: center; justify-content: center; transition: background .2s, color .2s; }
   .detail-qty-controls button:hover { background: var(--sky); color: #fff; }
   .detail-qty-value { font-weight: 800; font-size: 1.05rem; min-width: 30px; text-align: center; color: var(--navy); }
+  .detail-unit-row { display: flex; align-items: center; justify-content: space-between;
+    border: 1px solid #e8eef6; border-radius: 12px; padding: 10px 12px; background: #f8fbfe; margin-bottom: 10px; }
+  .detail-unit-label { font-weight: 700; font-size: .86rem; color: #6b7f9c; text-transform: uppercase; letter-spacing: .06em; }
+  .detail-unit-opts { display: flex; gap: 8px; }
+  .detail-unit-chip { border: 2px solid #dfe8f2; background: #fff; color: var(--navy); border-radius: 10px;
+    padding: 7px 12px; font-weight: 800; font-size: .82rem; cursor: pointer; transition: all .2s; }
+  .detail-unit-chip:hover { border-color: var(--sky); }
+  .detail-unit-chip.active { border-color: var(--navy); background: var(--navy); color: #fff; }
   .detail-subtotal { display: flex; align-items: center; justify-content: space-between;
     margin-top: 14px; padding: 10px 12px; background: #eef6fb; border-radius: 10px; }
   .detail-subtotal-l { font-size: .78rem; font-weight: 800; color: #6b7f9c; text-transform: uppercase; letter-spacing: .06em; }
@@ -3757,7 +3765,12 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
     addBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 5v14M5 12h14"/></svg> Agregar al carrito';
 
     detailPriceNum = numPrice(price || info.price);
+    detailBasePriceNum = detailPriceNum;
+    detailBaseName = name;
+    detailUnit = 1;
+    setupDetailUnits(card, name);
     q('#detailHeadPrice').textContent = price || (info.price ? info.price : 'Consultar');
+    applyDetailUnitView();
     updateDetailSubtotal();
     updateDetailWa();
 
@@ -3765,6 +3778,52 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
     q('#detailOverlay').classList.add('open');
     document.body.style.overflow = 'hidden';
   }
+
+  function isLiquidosX1lt(card) {
+    var nameEl = card.querySelector('.product-card-name');
+    if (!nameEl) return false;
+    var n = (nameEl.textContent || '').toLowerCase().replace(/\s+/g, ' ');
+    var m = /x1\s*lt\b/.test(n);
+    if (!m) return false;
+    var catSection = card.closest('.product-category');
+    if (!catSection) return false;
+    var h3 = catSection.querySelector('.category-header-info h3');
+    if (!h3) return false;
+    return /líquidos/i.test(h3.textContent || '');
+  }
+
+  function setupDetailUnits(card, name) {
+    var row = q('#detailUnitRow');
+    if (!row) return;
+    if (!isLiquidosX1lt(card) || !detailPriceNum) { row.style.display = 'none'; return; }
+    row.style.display = 'flex';
+    var c1 = q('#detailChip1'); var ch = q('#detailChipHalf');
+    if (c1) c1.classList.add('active');
+    if (ch) ch.classList.remove('active');
+    var half = numPrice('$' + Math.round(detailPriceNum * 0.5 / 10) * 10);
+    if (!half) half = 0;
+    if (ch) ch.textContent = '0.5 Litro' + (half ? ' · $' + half.toLocaleString('es-AR') : '');
+    if (c1) c1.textContent = '1 Litro' + (detailPriceNum ? ' · $' + detailPriceNum.toLocaleString('es-AR') : '');
+  }
+
+  function applyDetailUnitView() {
+    var baseName = detailBaseName;
+    var label = detailUnit === 0.5 ? ' (0.5L)' : '';
+    q('#detailTitle').textContent = baseName + label;
+    var priceThis = detailUnit === 0.5 ? Math.round(detailPriceNum / 2 / 10) * 10 : detailPriceNum;
+    detailPriceStr = priceThis ? '$' + priceThis.toLocaleString('es-AR') : '';
+    q('#detailPrice').textContent = detailPriceStr || 'Consultar';
+    q('#detailHeadPrice').textContent = detailPriceStr || 'Consultar';
+  }
+  window.detailSelectUnit = function(u) {
+    detailUnit = u;
+    var c1 = q('#detailChip1'), ch = q('#detailChipHalf');
+    if (c1) c1.classList.toggle('active', u === 1);
+    if (ch) ch.classList.toggle('active', u === 0.5);
+    applyDetailUnitView();
+    updateDetailSubtotal();
+    updateDetailWa();
+  };
 
   function detailShowPane(name, tab) {
     document.querySelectorAll('.detail-gallery-pane').forEach(function(p) { p.classList.remove('active'); });
@@ -3784,6 +3843,9 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
   var detailCat = '';
   var detailImgSrc = '';
   var detailPriceStr = '';
+  var detailUnit = 1;
+  var detailBasePriceNum = 0;
+  var detailBaseName = '';
 
   function updateDetailWa() {
     var msg = 'Hola! Consulto por ' + (q('#detailTitle').textContent || '') +
@@ -3792,7 +3854,8 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
   }
 
   function updateDetailSubtotal() {
-    var total = detailPriceNum * detailQty;
+    var priceU = detailUnit === 0.5 ? Math.round(detailPriceNum / 2 / 10) * 10 : detailPriceNum;
+    var total = priceU * detailQty;
     q('#detailSubtotal').textContent = total ? '$' + total.toLocaleString('es-AR') : 'Consultar';
   }
   window.updateDetailSubtotal = updateDetailSubtotal;
@@ -3816,7 +3879,7 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
     if (typeof window.addModalToCart === 'function') {
       window.addModalToCart(name, priceStr, detailImgSrc, detailQty, detailCat);
     }
-    var total = detailPriceNum * detailQty;
+    var total = (detailUnit === 0.5 ? Math.round(detailPriceNum / 2 / 10) * 10 : detailPriceNum) * detailQty;
     msg.textContent = detailQty + 'x ' + name + (total ? ' - $' + total.toLocaleString('es-AR') : '');
     setTimeout(function() {
       btn.classList.remove('added');
@@ -3903,6 +3966,13 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
             <span class="detail-buy-head-price" id="detailHeadPrice"></span>
           </div>
           <div class="detail-buy-body">
+            <div class="detail-unit-row" id="detailUnitRow" style="display:none">
+              <span class="detail-unit-label">Presentación</span>
+              <div class="detail-unit-opts">
+                <button type="button" class="detail-unit-chip active" data-unit="1" onclick="detailSelectUnit(1)" id="detailChip1">1 Litro</button>
+                <button type="button" class="detail-unit-chip" data-unit="0.5" onclick="detailSelectUnit(0.5)" id="detailChipHalf">0.5 Litro</button>
+              </div>
+            </div>
             <div class="detail-qty-row">
               <span class="detail-qty-label">Cantidad</span>
               <div class="detail-qty-controls">
