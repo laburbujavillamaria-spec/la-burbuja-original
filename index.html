@@ -124,7 +124,7 @@
     display: none; line-height: 1; }
   .nav-search.has-text .search-clear { display: block; }
 
-  .hero { position: relative; height: 100vh; min-height: 600px; overflow: hidden; margin-top: 148px; }
+  .hero { position: relative; height: 60vh; min-height: 360px; max-height: 480px; overflow: hidden; margin-top: 148px; }
   .carousel { position: relative; width: 100%; height: 100%; }
   .carousel-slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1s ease; display: flex; align-items: center; justify-content: center; }
   .carousel-slide.active { opacity: 1; }
@@ -138,24 +138,24 @@
     align-items: flex-start; justify-content: center; padding: 0 8%; }
   .hero-badge { display: inline-flex; align-items: center; gap: 6px;
     background: rgba(77,200,216,.18); border: 1px solid rgba(77,200,216,.4);
-    color: var(--sky); font-size: .8rem; font-weight: 700; letter-spacing: .12em;
-    padding: 6px 14px; border-radius: 20px; margin-bottom: 20px;
+    color: var(--sky); font-size: .7rem; font-weight: 700; letter-spacing: .12em;
+    padding: 5px 12px; border-radius: 20px; margin-bottom: 12px;
     animation: fadeDown .8s ease forwards; }
-  .hero-logo-img { height: 80px; width: auto; filter: brightness(0) invert(1); margin-bottom: 16px;
+  .hero-logo-img { height: 52px; width: auto; filter: brightness(0) invert(1); margin-bottom: 8px;
     animation: fadeDown .9s ease forwards; }
-  .hero-title { font-family: 'Playfair Display', serif; font-size: clamp(2.2rem, 5vw, 3.8rem);
-    color: #fff; line-height: 1.1; margin-bottom: 18px; max-width: 650px;
+  .hero-title { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 3.4vw, 2.8rem);
+    color: #fff; line-height: 1.1; margin-bottom: 12px; max-width: 650px;
     animation: fadeLeft 1s ease forwards; }
   .hero-title span { color: var(--sky); }
-  .hero-sub { color: rgba(255,255,255,.85); font-size: 1.05rem; max-width: 520px;
-    margin-bottom: 32px; line-height: 1.6; animation: fadeLeft 1.1s ease forwards; }
+  .hero-sub { color: rgba(255,255,255,.85); font-size: .95rem; max-width: 520px;
+    margin-bottom: 20px; line-height: 1.5; animation: fadeLeft 1.1s ease forwards; }
   .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; animation: fadeUp 1.2s ease forwards; }
-  .btn-primary { background: var(--sky); color: #fff; padding: 14px 28px; border-radius: 30px;
-    text-decoration: none; font-weight: 800; font-size: 1rem; transition: transform .2s, box-shadow .2s;
+  .btn-primary { background: var(--sky); color: #fff; padding: 11px 24px; border-radius: 30px;
+    text-decoration: none; font-weight: 800; font-size: .95rem; transition: transform .2s, box-shadow .2s;
     box-shadow: 0 4px 16px rgba(77,200,216,.4); }
   .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(77,200,216,.5); }
-  .btn-secondary { background: rgba(255,255,255,.15); color: #fff; padding: 14px 28px;
-    border-radius: 30px; text-decoration: none; font-weight: 700; font-size: 1rem;
+  .btn-secondary { background: rgba(255,255,255,.15); color: #fff; padding: 11px 24px;
+    border-radius: 30px; text-decoration: none; font-weight: 700; font-size: .95rem;
     border: 2px solid rgba(255,255,255,.4); transition: background .2s; }
   .btn-secondary:hover { background: rgba(255,255,255,.25); }
   .carousel-dots { position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%);
@@ -175,7 +175,7 @@
   /* ── STATS BAR ── */
   .stats-bar { background: linear-gradient(90deg, var(--navy) 0%, var(--navy-mid) 100%);
     display: flex; justify-content: center; gap: 0; flex-wrap: wrap; }
-  .stat { flex: 1; min-width: 150px; max-width: 220px; padding: 22px 16px; text-align: center;
+  .stat { flex: 1; min-width: 150px; max-width: 220px; padding: 14px 16px; text-align: center;
     border-right: 1px solid rgba(255,255,255,.1); }
   .stat:last-child { border-right: none; }
   .stat-num { font-size: 1.8rem; font-weight: 900; color: var(--sky); line-height: 1; }
@@ -590,9 +590,9 @@
     .oferta-section::before, .oferta-section::after { filter: none; }
   }
   @media (max-width: 600px) {
-    .hero { height: 90vh; }
-    .hero-title { font-size: 2rem; }
-    .hero-logo-img { height: 55px; }
+    .hero { height: 70vh; min-height: 320px; }
+    .hero-title { font-size: 1.6rem; }
+    .hero-logo-img { height: 44px; }
     .products-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
     .product-card { padding: 10px; gap: 5px; }
     .product-card-img { height: 160px; }
