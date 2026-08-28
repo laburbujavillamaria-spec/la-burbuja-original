@@ -3440,12 +3440,26 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
   document.addEventListener('click', function(e) {
     const img = e.target.closest('.product-card-img, .oferta-img, .cart-item-img');
     if (img) {
-      const lb = document.getElementById('lightbox');
-      lb.querySelector('img').src = img.src;
-      lb.classList.add('open');
-      document.body.style.overflow = 'hidden';
+      openLightbox(img.src);
     }
   });
+
+  function openLightbox(src) {
+    const lb = document.getElementById('lightbox');
+    const imgEl = lb.querySelector('img');
+    imgEl.src = src;
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    var hd = src
+      .replace(/^productos\//i, 'productos_hd/')
+      .replace(/\.(png|jpe?g|webp|gif|bmp|jfif|tiff)$/i, '.jpg');
+    if (hd !== src) {
+      var probe = new Image();
+      probe.onload = function() { imgEl.src = hd; };
+      probe.onerror = function() { /* mantener version original */ };
+      probe.src = hd;
+    }
+  }
 
   function closeLightbox() {
     document.getElementById('lightbox').classList.remove('open');
