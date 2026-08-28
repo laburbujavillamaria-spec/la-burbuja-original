@@ -403,7 +403,8 @@
   .product-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
   .product-card-name { font-weight: 900; font-size: .85rem; color: var(--navy); line-height: 1.3;
     text-align: center; letter-spacing: .01em; text-transform: uppercase;
-    min-height: 2.6em; }
+    min-height: 2.6em; cursor: pointer; }
+  .product-card-name:hover { text-decoration: underline dotted rgba(26,58,107,.55); text-underline-offset: 3px; }
   .product-card-price { font-weight: 900; font-size: 1rem; color: #000; text-align: center;
     border: 1.5px solid #e0e0e0; border-radius: 8px; padding: 4px 10px;
     background: linear-gradient(135deg, #f5f7fa, #e8ecf1);
@@ -474,6 +475,103 @@
     font-size: 1.3rem; display: flex; align-items: center; justify-content: center;
     transition: background .2s; }
   .lightbox-close:hover { background: rgba(255,255,255,.3); }
+
+  /* ── PRODUCT DETAIL MODAL ── */
+  .detail-overlay { position: fixed; inset: 0; z-index: 2100; background: rgba(5,20,45,.72);
+    display: flex; align-items: center; justify-content: center; padding: 20px;
+    opacity: 0; pointer-events: none; transition: opacity .28s; }
+  .detail-overlay.open { opacity: 1; pointer-events: all; }
+  .detail-modal { background: #fff; border-radius: 18px; max-width: 940px; width: 100%;
+    max-height: 92vh; overflow-y: auto; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,.4);
+    transform: translateY(14px) scale(.98); transition: transform .28s; }
+  .detail-overlay.open .detail-modal { transform: translateY(0) scale(1); }
+  .detail-close { position: absolute; top: 14px; right: 14px; z-index: 5; width: 38px; height: 38px;
+    border-radius: 50%; border: none; background: rgba(26,58,107,.12); color: var(--navy);
+    font-size: 1.25rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: background .2s, color .2s; }
+  .detail-close:hover { background: var(--navy); color: #fff; }
+  .detail-grid { display: grid; grid-template-columns: 1fr 1fr; min-height: 540px; }
+  /* Left: selectable photo / desc */
+  .detail-gallery { display: flex; flex-direction: column; background: linear-gradient(135deg, #eef6fb, #f8fcfe); }
+  .detail-gallery-tabs { display: flex; gap: 8px; padding: 16px 16px 0; }
+  .detail-gallery-tab { flex: 1; border: 2px solid rgba(26,58,107,.15); background: #fff; color: var(--navy);
+    font-weight: 800; font-size: .8rem; padding: 9px 6px; border-radius: 12px; cursor: pointer;
+    transition: background .2s, border-color .2s, color .2s; }
+  .detail-gallery-tab.active { background: var(--navy); border-color: var(--navy); color: #fff; }
+  .detail-gallery-view { flex: 1; position: relative; overflow: hidden; min-height: 430px; }
+  .detail-gallery-pane { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    padding: 24px; opacity: 0; pointer-events: none; transition: opacity .25s; }
+  .detail-gallery-pane.active { opacity: 1; pointer-events: all; }
+  .detail-photo { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 12px;
+    box-shadow: 0 8px 28px rgba(26,58,107,.2); }
+  .detail-desc-pane { width: 100%; height: 100%; overflow-y: auto; border-radius: 12px; padding: 20px;
+    display: flex; flex-direction: column; gap: 14px; }
+  .detail-desc-pane h4 { font-size: .8rem; font-weight: 900; color: var(--sky); text-transform: uppercase;
+    letter-spacing: .08em; margin: 0 0 5px; }
+  .detail-desc-pane p { margin: 0; font-size: .88rem; color: #33415c; line-height: 1.55; }
+  .detail-seller { border: 1.5px solid rgba(77,200,216,.4); border-radius: 12px; padding: 12px 14px; background: #fff; }
+  .detail-seller-head { display: flex; align-items: center; gap: 10px; }
+  .detail-seller-logo { width: 44px; height: 44px; border-radius: 10px; object-fit: cover;
+    box-shadow: 0 3px 10px rgba(26,58,107,.2); }
+  .detail-seller-name { font-weight: 900; color: var(--navy); font-size: .9rem; }
+  .detail-seller-name span { color: var(--sky); display: block; font-size: .66rem; font-weight: 700; letter-spacing: .1em; }
+  .detail-seller-row { display: flex; align-items: center; gap: 7px; font-size: .8rem; color: var(--navy); margin-top: 7px; }
+  .detail-seller-row a { color: var(--navy); text-decoration: none; font-weight: 700; }
+  .detail-seller-row a:hover { color: var(--sky); text-decoration: underline; }
+  .detail-map-link { text-decoration: underline dotted rgba(26,58,107,.55) !important; text-underline-offset: 3px; }
+  /* Right: info + buy */
+  .detail-body { padding: 30px 30px 26px; display: flex; flex-direction: column; }
+  .detail-tag { display: inline-block; background: rgba(77,200,216,.14); color: var(--sky);
+    font-size: .68rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+    padding: 5px 12px; border-radius: 20px; width: fit-content; margin-bottom: 14px; }
+  .detail-title { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--navy); margin: 0;
+    line-height: 1.15; letter-spacing: -.01em; }
+  .detail-price-row { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+  .detail-price { font-size: 1.75rem; font-weight: 900; color: var(--navy); }
+  .detail-price-note { font-size: .76rem; font-weight: 700; color: #7d8ca8; }
+  .detail-buy-card { margin-top: 24px; border: 2px solid #dde7f2; border-radius: 18px;
+    overflow: hidden; box-shadow: 0 10px 26px rgba(26,58,107,.14); background: #fff; }
+  .detail-buy-head { background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
+    color: #fff; padding: 13px 18px; display: flex; align-items: center; justify-content: space-between; }
+  .detail-buy-head-t { font-size: .74rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+  .detail-buy-head-price { font-size: 1rem; font-weight: 900; color: var(--sky); }
+  .detail-buy-body { padding: 18px; }
+  .detail-qty-row { display: flex; align-items: center; justify-content: space-between;
+    border: 1px solid #e8eef6; border-radius: 12px; padding: 10px 12px; background: #f8fbfe; }
+  .detail-qty-label { font-weight: 700; font-size: .92rem; color: var(--navy); }
+  .detail-qty-controls { display: flex; align-items: center; gap: 6px; background: #fff; border-radius: 10px;
+    padding: 3px; border: 1px solid #e3eaf3; }
+  .detail-qty-controls button { background: #eef4fb; color: var(--navy); border: none; border-radius: 8px;
+    width: 30px; height: 30px; cursor: pointer; font-size: 1.05rem; font-weight: 800;
+    display: flex; align-items: center; justify-content: center; transition: background .2s, color .2s; }
+  .detail-qty-controls button:hover { background: var(--sky); color: #fff; }
+  .detail-qty-value { font-weight: 800; font-size: 1.05rem; min-width: 30px; text-align: center; color: var(--navy); }
+  .detail-subtotal { display: flex; align-items: center; justify-content: space-between;
+    margin-top: 14px; padding: 10px 12px; background: #eef6fb; border-radius: 10px; }
+  .detail-subtotal-l { font-size: .78rem; font-weight: 800; color: #6b7f9c; text-transform: uppercase; letter-spacing: .06em; }
+  .detail-subtotal-v { font-size: 1.1rem; font-weight: 900; color: var(--navy); }
+  .detail-add-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%;
+    margin-top: 14px; background: linear-gradient(135deg, var(--navy-mid) 0%, var(--navy) 100%);
+    color: #fff; border: none; border-radius: 12px; padding: 15px; font-weight: 800; font-size: 1rem;
+    cursor: pointer; box-shadow: 0 6px 18px rgba(26,58,107,.28); transition: transform .2s, box-shadow .2s; }
+  .detail-add-btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(26,58,107,.36); }
+  .detail-add-btn.added { background: linear-gradient(135deg, #25D366, #1ebe5b); box-shadow: 0 6px 18px rgba(37,211,102,.32); }
+  .detail-add-msg { text-align: center; font-size: .8rem; font-weight: 700; color: #128C7E;
+    min-height: 1.4em; margin-top: 10px; }
+  .detail-divider { height: 1px; background: #eef3f9; margin: 22px 0; }
+  .detail-wa-label { font-size: .7rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
+    color: #8ba0bc; text-align: center; margin-bottom: 10px; }
+  .detail-wa-btn { display: flex; align-items: center; justify-content: center; gap: 9px; width: 100%;
+    background: #25D366; color: #fff; border: none; border-radius: 12px; padding: 15px;
+    font-weight: 800; font-size: .98rem; cursor: pointer; text-decoration: none;
+    box-shadow: 0 6px 18px rgba(37,211,102,.25); transition: transform .2s, box-shadow .2s, background .2s; }
+  .detail-wa-btn:hover { background: #1ebe5b; transform: translateY(-1px); box-shadow: 0 8px 22px rgba(37,211,102,.32); }
+  @media (max-width: 760px) {
+    .detail-grid { grid-template-columns: 1fr; min-height: 0; }
+    .detail-gallery { min-height: 380px; }
+    .detail-gallery-view { min-height: 360px; }
+    .detail-body { padding: 20px 16px 18px; }
+  }
 
   /* ── CONTACT ── */
   .contact { background: var(--navy); padding: 80px 5%; }
@@ -2398,8 +2496,8 @@
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1A3A6B" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
         </div>
         <div class="contact-card-label">UBICACIÓN</div>
-        <div class="contact-card-val"><a href="https://www.google.com/maps/place/La+Burbuja/data=!4m2!3m1!1s0x0:0x97a342058215e469?sa=X&ved=1t:2428&ictx=111" target="_blank" rel="noopener" class="contact-map-link">Villa María, Córdoba</a></div>
-        <div class="contact-map-hint"><a href="https://www.google.com/maps/place/La+Burbuja/data=!4m2!3m1!1s0x0:0x97a342058215e469?sa=X&ved=1t:2428&ictx=111" target="_blank" rel="noopener">Cómo llegar ➜</a></div>
+        <div class="contact-card-val"><a href="https://www.google.com/maps/search/?api=1&query=La+Burbuja+Villa+Maria+Velez+Sarsfield+497" target="_blank" rel="noopener" class="contact-map-link">Bv. Vélez Sarsfield 497, Villa María, Córdoba</a></div>
+        <div class="contact-map-hint"><a href="https://www.google.com/maps/search/?api=1&query=La+Burbuja+Villa+Maria+Velez+Sarsfield+497" target="_blank" rel="noopener">Cómo llegar ➜</a></div>
       </div>
     </div>
     <a href="https://wa.me/5493534012349?text=Hola!%20Me%20contacto%20desde%20la%20web%20de%20La%20Burbuja%2C%20necesito%20asesoramiento." class="contact-wa-big reveal" target="_blank" rel="noopener">
@@ -2417,7 +2515,7 @@
       <img src="la_burbuja-02.png" alt="LA BURBUJA" class="footer-logo">
       <div class="footer-brand-text">
         La Burbuja · Desde 1992<br>
-        Villa María, Córdoba, Argentina
+        Bv. Vélez Sarsfield 497 · Villa María, Córdoba
       </div>
     </div>
     <div class="footer-links">
@@ -3420,10 +3518,376 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
 })();
 </script>
 
+<script>
+(function() {
+  var WA = '5493534012349';
+  var sellerDesc = {
+    'lavandina-x5lt': {
+      tag: 'Desinfectante · 5 Litros',
+      desc: 'Lavandina concentrada a base de hipoclorito de sodio, en presentación de 5 litros. Limpia, desinfecta y elimina gérmenes y bacterias de superficies de uso doméstico, comercial e industrial.',
+      use: 'Para desinfectar superficies (baños, azulejos, cerámicos y pisos): diluir 1/4 de taza en 1 litro de agua tibia, aplicar la solución, dejar actuar unos minutos y enjuagar con agua limpia. No mezclar con otros productos de limpieza. Mantener fuera del alcance de los niños.'
+    },
+    'lavandina-x1lt': {
+      tag: 'Desinfectante · 1 Litro',
+      desc: 'Lavandina a base de hipoclorito de sodio que desinfecta superficies, elimina gérmenes y bacterias y ayuda a remover manchas en el hogar.',
+      use: 'Diluir 1/4 de taza de lavandina en 1 litro de agua tibia, aplicar sobre la superficie, dejar actuar unos minutos y enjuagar con agua limpia. No mezclar con otros productos. Mantener fuera del alcance de los niños.'
+    },
+    'cloro-x5lt': {
+      tag: 'Desinfectante y desodorizante · 5 Litros',
+      desc: 'Cloro líquido a base de hipoclorito de sodio, desinfectante de uso doméstico e industrial que limpia, desodoriza y elimina gérmenes, hongos y bacterias de baños, cocinas, pisos y superficies.',
+      use: 'Para desinfectar pisos y superficies, diluir unos 100 cm³ de cloro en 10 litros de agua, aplicar, dejar actuar 5 a 10 minutos, refregar y enjuagar con abundante agua limpia. No mezclar con ácidos ni productos amoniacales (genera gases tóxicos).'
+    },
+    'alcohol-en-gel-x1lt': {
+      tag: 'Desinfectante de manos · 1 Litro',
+      desc: 'Alcohol en gel para la higiene y desinfección de manos, a base de alcohol, de secado rápido y sin necesidad de enjuague.',
+      use: 'Colocar una dosis en la palma de una mano y frotar palmas, dorso, entre los dedos y pulgares hasta que esté completamente seco. No sustituye el lavado con agua y jabón.'
+    },
+    'alcohol-en-gel-suelto-bidon-x5-lt': {
+      tag: 'Desinfectante de manos · 5 Litros',
+      desc: 'Alcohol en gel suelto en bidón de 5 litros para reposición de dispensadores en hogares, comercios y oficinas.',
+      use: 'Colocar una dosis en la palma de una mano y frotar palmas, dorso, entre los dedos y pulgares hasta que esté completamente seco. No sustituye el lavado con agua y jabón.'
+    },
+    'desengrasante-para-motores-walker-x1lt': {
+      tag: 'Automotriz · Walker · 1 Litro',
+      desc: 'Desengrasante para motores Walker: producto con alto poder de limpieza concentrado, emulsionable con el agua y de alta volatilidad. Limpia y retira las grasas del metal.',
+      use: 'Rociar el producto sobre la superficie a desengrasar, dejar actuar unos minutos y enjuagar con agua. Usar en lugares ventilados y evitar el contacto con la piel y los ojos.'
+    },
+    'desengrasante-x1lt': {
+      tag: 'Desengrasante · 1 Litro',
+      desc: 'Desengrasante multiuso de alta eficacia para la limpieza de superficies lavables con grasa, como cocinas, campanas, pisos y maquinarias.',
+      use: 'Diluir en agua según el nivel de suciedad, aplicar sobre la superficie, dejar actuar unos minutos, frotar y enjuagar. Usar guantes en superficies sensibles.'
+    },
+    'desengrasante-x5lt': {
+      tag: 'Desengrasante · 5 Litros',
+      desc: 'Desengrasante multiuso de alta eficacia en presentación de 5 litros para la limpieza de superficies lavables con grasa.',
+      use: 'Diluir en agua según el nivel de suciedad, aplicar sobre la superficie, dejar actuar unos minutos, frotar y enjuagar. Usar guantes en superficies sensibles.'
+    },
+    'desengrasante-tersan-mega-x5lt': {
+      tag: 'Tersan Mega · 5 Litros',
+      desc: 'Desengrasante Tersan Mega (Proviser): formulado para la limpieza de superficies lavables, con acción desengrasante de alta eficacia para trabajo pesado en pisos, paredes, máquinas y superficies. Mantiene la suciedad en suspensión y es apto para diluirse en cualquier tipo de agua.',
+      use: 'Diluir el producto en agua según el nivel de suciedad, aplicar sobre la superficie, dejar actuar unos minutos, frotar y enjuagar con abundante agua. Mantener fuera del alcance de los niños.'
+    },
+    'desodorante-x1lt': {
+      tag: 'Desodorante de ambientes · 1 Litro',
+      desc: 'Desodorante líquido para ambientar y refrescar ambientes, dejando una agradable fragancia en el hogar. Consultá las fragancias disponibles.',
+      use: 'Diluir el producto en agua según las indicaciones del envase y aplicar sobre la superficie o ambiente a aromatizar. Mantener fuera del alcance de los niños.'
+    },
+    'desodorante-x5lt': {
+      tag: 'Desodorante de ambientes · 5 Litros',
+      desc: 'Desodorante líquido en bidón de 5 litros para aromatizar y refrescar ambientes del hogar o el negocio.',
+      use: 'Diluir el producto en agua según las indicaciones del envase y aplicar sobre la superficie o ambiente a aromatizar. Mantener fuera del alcance de los niños.'
+    },
+    'detergente-x1lt': {
+      tag: 'Vajilla · 1 Litro',
+      desc: 'Detergente para el lavado manual de vajilla con buena generación de espuma y fácil enjuague. Ideal para el uso diario en el hogar.',
+      use: 'Diluir una pequeña cantidad en la esponja o en la bacha con agua, lavar la vajilla frotando hasta eliminar la suciedad y enjuagar bien con agua limpia.'
+    },
+    'detergente-x5lt': {
+      tag: 'Vajilla · 5 Litros',
+      desc: 'Detergente para vajilla en presentación de 5 litros, con buena espuma y fácil enjuague para uso doméstico o comercial.',
+      use: 'Diluir una pequeña cantidad en la esponja o en la bacha con agua, lavar frotando hasta eliminar la suciedad y enjuagar bien con agua limpia.'
+    },
+    'detergente-concentrado-x1lt': {
+      tag: 'Concentrado · 1 Litro',
+      desc: 'Detergente concentrado: contiene menos agua y más ingredientes activos por mililitro que un detergente común, por lo que rinde mucho más y brinda gran poder de limpieza.',
+      use: 'Usar la mitad o menos de la dosis de un detergente común. Diluir una pequeña cantidad en la esponja o bacha, lavar y enjuagar bien con agua limpia.'
+    },
+    'detergente-concentrado-x5lt': {
+      tag: 'Concentrado · 5 Litros',
+      desc: 'Detergente concentrado en bidón de 5 litros: más ingredientes activos por mililitro, alto rendimiento y ahorro para uso doméstico o comercial.',
+      use: 'Usar la mitad o menos de la dosis de un detergente común. Diluir una pequeña cantidad, lavar y enjuagar bien con agua limpia.'
+    },
+    'flit-x1lt': {
+      tag: 'Insecticida · 1 Litro',
+      desc: 'Insecticida de uso doméstico, formulado a base de solvente, eficaz contra moscas, mosquitos y otros insectos voladores.',
+      use: 'Pulverizar directamente sobre los insectos, dejar actuar y ventilar bien el ambiente antes de permanecer en el lugar. No aplicar sobre alimentos y mantener fuera del alcance de los niños.'
+    },
+    'jabon-liquido-para-manos-rosa-o-amarillo-x1lt': {
+      tag: 'Higiene de manos · 1 Litro',
+      desc: 'Jabón líquido para manos listo para usar, que limpia y humecta la piel. Apto para baños de hogar, oficinas y comercios.',
+      use: 'Humedecer las manos, aplicar una pequeña cantidad, frotar palmas, dorso y entre los dedos y enjuagar con abundante agua.'
+    },
+    'jabon-liquido-para-manos-johnson-x5lt-blanco': {
+      tag: 'Johnson · 5 Litros',
+      desc: 'Jabón líquido para manos Johnson, de fórmula suave para la piel, con pH balanceado e hipoalergénica. Ideal para la higiene diaria en hogares y comercios.',
+      use: 'Colocar una pequeña cantidad sobre las manos, masajear con movimientos circulares y enjuagar bien con agua.'
+    },
+    'jabon-liquido-para-ropa-tipo-skip-ariel-x1lt': {
+      tag: 'Detergente de ropa · 1 Litro',
+      desc: 'Jabón líquido para lavar ropa tipo Skip/Ariel. Se disuelve rápidamente en el agua y sirve para prendas blancas y de color.',
+      use: 'Medir la cantidad recomendada (aproximadamente 50 a 100 ml por carga según la suciedad), verter en el cajetín del lavarropas o directamente sobre la ropa en el tambor y seleccionar el ciclo de lavado.'
+    },
+    'liquido-para-lampazo-x1-lt': {
+      tag: 'Pisos · 1 Litro',
+      desc: 'Líquido para lampazo listo para usar, perfumado, que atrapa la suciedad y deja los pisos limpios, brillantes y con un agradable aroma por más tiempo.',
+      use: 'Humedecer el piso con un lampazo limpio empapado en el producto, trapidar hasta eliminar la suciedad y repetir si es necesario. En suciedad resistente, dejar actuar unos minutos antes de pasar el lampazo.'
+    },
+    'perfume-para-ropa-x1lt': {
+      tag: 'Textil · 1 Litro',
+      desc: 'Perfume para ropa que aporta una fragancia fresca y duradera a prendas y textiles, dejando una sensación de limpieza y cuidado.',
+      use: 'Agitar suavemente antes de usar y pulverizar sobre la prenda seca a unos 30 cm de distancia. Dejar secar al aire antes de guardar o usar.'
+    },
+    'renovador-de-caucho-full-car-x1lt': {
+      tag: 'Full Car · 1 Litro',
+      desc: 'Renovador de caucho Full Car: renueva, recupera, hidrata y da brillo a plásticos, neumáticos y gomas, con protección frente a los rayos UV y un acabado satinado.',
+      use: 'Lavar y secar la superficie, aplicar el producto con una esponja o paño limpio y seco, distribuir en forma pareja y dejar secar.'
+    },
+    'renovador-de-caucho-x1lt': {
+      tag: 'Automotriz · 1 Litro',
+      desc: 'Renovador de caucho que devuelve el color, hidrata y da brillo a gomas, neumáticos y plásticos, protegiéndolos del resecamiento.',
+      use: 'Lavar y secar la superficie, aplicar con una esponja o paño limpio y seco, distribuir en forma pareja y dejar secar.'
+    },
+    'silicona-para-exterior-full-car-x1lt': {
+      tag: 'Full Car · 1 Litro',
+      desc: 'Silicona Full Car: renueva, recupera, hidrata y da brillo a plásticos, neumáticos y gomas del exterior del automóvil, con protección frente a los rayos UV.',
+      use: 'Lavar y secar la superficie, aplicar el producto con una esponja limpia y seca, distribuir en forma uniforme y dejar secar hasta lograr un brillo parejo.'
+    },
+    'silicona-perfumada-para-interior-x1lt-full-car': {
+      tag: 'Full Car · Interior · 1 Litro',
+      desc: 'Silicona perfumada para interior: solución de siliconas en solventes que protege tableros, tapizados vinílicos o de cuero y plásticos. Forma una película brillante no grasa, manteniendo la elasticidad y renovando el color.',
+      use: 'Limpiar la superficie, aplicar el producto sobre un paño o esponja, distribuir en forma uniforme y dejar secar, realzando el brillo y el aroma.'
+    },
+    'suavizante-x1lt': {
+      tag: 'Textil · 1 Litro',
+      desc: 'Suavizante para ropa que aporta suavidad y una fragancia agradable y duradera a las prendas.',
+      use: 'Dosificar unos 50 cm³ de suavizante en el compartimento indicado de la lavadora y continuar con el ciclo de lavado normal.'
+    },
+    'suavizante-con-microcapsulas-x1lt': {
+      tag: 'Microcápsulas · 1 Litro',
+      desc: 'Suavizante concentrado con microcápsulas de fragancia que se depositan sobre la ropa y se liberan progresivamente, dejando un aroma duradero, suavidad y protección de las fibras.',
+      use: 'Dosificar una pequeña cantidad en la gaveta del lavarropas, en el agua del último enjuague. No mezclar con detergentes ni usar en prendas de seda o cuero.'
+    },
+    'limpia-vidrios-x5lt': {
+      tag: 'Vidrios y multiusos · 5 Litros',
+      desc: 'Limpiador líquido para vidrios, cristales, espejos y múltiples superficies. Disuelve grasitud y suciedad y deja la superficie limpia y sin vetas.',
+      use: 'Pulverizar sobre la superficie, frotar con un paño limpio y seco que no deje pelusa y repasar con otro paño seco. No requiere enjuague.'
+    },
+    'cido-muriatico-x5lt': {
+      tag: 'Limpieza fuerte · 5 Litros',
+      desc: 'Ácido muriático para la limpieza de superficies difíciles como concreto, piedra, azulejos y baños. Producto altamente corrosivo que debe usarse con extremo cuidado.',
+      use: 'Usar siempre diluido en agua, con guantes y lentes de protección y en lugares ventilados. Aplicar con cepillo sobre la superficie, esperar unos minutos y enjuagar con abundante agua. No aplicar sobre metales. Mantener fuera del alcance de los niños.'
+    },
+    'restaurador-de-pisos-8m-x5lt': {
+      tag: '8M · Pisos · 5 Litros',
+      desc: 'Restaurador 8M: renovador y limpiador de pisos basado en tecnología de cera, que limpia, repara películas dañadas y devuelve el brillo en una sola operación. Ideal para pisos sin recubrimiento o tratados con emulsiones.',
+      use: 'Aplicar sobre el piso con trapeador o máquina, distribuirlo en forma pareja y dejar secar. Opcionalmente repasar con máquina para realzar aún más el brillo.'
+    },
+    'veneno-x5lt': {
+      tag: 'Control de plagas · 5 Litros',
+      desc: 'Producto para el control de plagas e insectos en el hogar, la industria o el comercio, en presentación de 5 litros.',
+      use: 'Usar siempre siguiendo estrictamente las indicaciones del envase del fabricante. Aplicar fuera del alcance de los niños y las mascotas, y evitar el contacto con alimentos, la piel y los ojos.'
+    }
+  };
+  var GENERIC = {
+    desc: 'Producto de excelente calidad, seleccionado especialmente para que tu hogar o negocio quede siempre limpio y cuidado. Consultanos por este y muchos otros artículos de limpieza.',
+    use: 'Seguí las indicaciones del envase del producto. Ante dudas sobre su uso o dosificación, consultanos por WhatsApp y te asesoramos sin compromiso.'
+  };
+
+  function slug(name) {
+    return name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  }
+
+  function q(sel) { return document.querySelector(sel); }
+
+  function numPrice(str) {
+    if (!str) return 0;
+    var digits = str.replace(/[^\d]/g, '');
+    return digits ? parseInt(digits, 10) : 0;
+  }
+
+  function openDetail(card) {
+    var img = card.querySelector('.product-card-img');
+    var nameEl = card.querySelector('.product-card-name');
+    var priceEl = card.querySelector('.product-card-price') || card.querySelector('.unit-price');
+    var name = nameEl ? nameEl.textContent.trim() : '';
+    var price = priceEl ? priceEl.textContent.trim() : '';
+    var key = slug(name);
+    var info = sellerDesc[key] || {};
+
+    q('#detailPhoto').src = img ? img.src : '';
+    q('#detailPhoto').alt = name;
+    q('#detailTitle').textContent = name;
+    q('#detailTag').textContent = info.tag || 'Artículo de limpieza';
+    q('#detailPrice').textContent = price || (info.price ? info.price : 'Consultar');
+    q('#detailPriceNote').textContent = info.priceNote || '';
+    q('#detailDesc').textContent = info.desc || GENERIC.desc.split('\n')[0];
+    q('#detailUse').textContent = info.use || GENERIC.use;
+
+    detailQty = 1;
+    q('#detailQty').textContent = detailQty;
+    q('#detailAddMsg').textContent = '';
+    var addBtn = q('#detailAddBtn');
+    addBtn.classList.remove('added');
+    addBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 5v14M5 12h14"/></svg> Agregar al carrito';
+
+    detailPriceNum = numPrice(price || info.price);
+    q('#detailHeadPrice').textContent = price || (info.price ? info.price : 'Consultar');
+    updateDetailSubtotal();
+    updateDetailWa();
+
+    detailShowPane('photo', null);
+    q('#detailOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function detailShowPane(name, tab) {
+    document.querySelectorAll('.detail-gallery-pane').forEach(function(p) { p.classList.remove('active'); });
+    document.querySelectorAll('.detail-gallery-tab').forEach(function(t) { t.classList.remove('active'); });
+    q('#dPane-' + name).classList.add('active');
+    if (tab) {
+      tab.classList.add('active');
+    } else {
+      var fallback = document.querySelector('.detail-gallery-tab[data-pane="' + name + '"]');
+      if (fallback) fallback.classList.add('active');
+    }
+  }
+  window.detailShowPane = detailShowPane;
+
+  var detailQty = 1;
+  var detailPriceNum = 0;
+
+  function updateDetailWa() {
+    var msg = 'Hola! Consulto por ' + (q('#detailTitle').textContent || '') +
+      (detailQty > 1 ? ' (x' + detailQty + ')' : '');
+    q('#detailWa').href = 'https://wa.me/' + WA + '?text=' + encodeURIComponent(msg);
+  }
+
+  function updateDetailSubtotal() {
+    var total = detailPriceNum * detailQty;
+    q('#detailSubtotal').textContent = total ? '$' + total.toLocaleString('es-AR') : 'Consultar';
+  }
+  window.updateDetailSubtotal = updateDetailSubtotal;
+
+  function detailUpdateQty(delta) {
+    detailQty = Math.max(1, detailQty + delta);
+    q('#detailQty').textContent = detailQty;
+    updateDetailSubtotal();
+    updateDetailWa();
+  }
+  window.detailUpdateQty = detailUpdateQty;
+
+  function detailAddToCart() {
+    var btn = q('#detailAddBtn');
+    var msg = q('#detailAddMsg');
+    var name = q('#detailTitle').textContent;
+    btn.classList.add('added');
+    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> ¡Agregado al carrito!';
+    var total = detailPriceNum * detailQty;
+    msg.textContent = detailQty + 'x ' + name + (total ? ' - $' + total.toLocaleString('es-AR') : '');
+    setTimeout(function() {
+      btn.classList.remove('added');
+      btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 5v14M5 12h14"/></svg> Agregar al carrito';
+    }, 1800);
+  }
+  window.detailAddToCart = detailAddToCart;
+
+  function closeDetail() {
+    q('#detailOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  window.closeDetail = closeDetail;
+
+  document.querySelectorAll('.product-card-name').forEach(function(nameEl) {
+    nameEl.addEventListener('click', function(ev) {
+      ev.stopPropagation();
+      openDetail(nameEl.closest('.product-card'));
+    });
+  });
+
+  document.addEventListener('keydown', function(ev) {
+    if (ev.key === 'Escape') closeDetail();
+  });
+})();
+</script>
+
 <!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox" onclick="if(event.target===this)closeLightbox()">
   <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
   <img src="" alt="AMPLIAR IMAGEN">
+</div>
+
+<!-- PRODUCT DETAIL MODAL -->
+<div class="detail-overlay" id="detailOverlay" onclick="if(event.target===this)closeDetail()">
+  <div class="detail-modal" role="dialog" aria-modal="true" aria-label="Detalle del producto">
+    <button class="detail-close" onclick="closeDetail()" aria-label="Cerrar">&times;</button>
+    <div class="detail-grid">
+      <!-- LEFT: selectable photo / desc -->
+      <div class="detail-gallery">
+        <div class="detail-gallery-tabs">
+          <button type="button" class="detail-gallery-tab active" data-pane="photo" onclick="detailShowPane('photo', this)">Foto del producto</button>
+          <button type="button" class="detail-gallery-tab" data-pane="desc" onclick="detailShowPane('desc', this)">Descripción</button>
+        </div>
+        <div class="detail-gallery-view">
+          <div class="detail-gallery-pane active" id="dPane-photo">
+            <img class="detail-photo" id="detailPhoto" src="" alt="">
+          </div>
+          <div class="detail-gallery-pane" id="dPane-desc">
+            <div class="detail-desc-pane">
+              <div>
+                <h4>Descripción</h4>
+                <p id="detailDesc"></p>
+              </div>
+              <div>
+                <h4>Modo de uso</h4>
+                <p id="detailUse"></p>
+              </div>
+              <div class="detail-seller">
+                <div class="detail-seller-head">
+                  <div class="detail-seller-name">LA BURBUJA<span>Artículos de limpieza · Villa María</span></div>
+                </div>
+                <div class="detail-seller-row">✉️ <a href="mailto:laburbujavillamaria@gmail.com">laburbujavillamaria@gmail.com</a></div>
+                <div class="detail-seller-row">💬 <a href="https://wa.me/5493534012349" target="_blank" rel="noopener">353 401-2349</a></div>
+                <div class="detail-seller-row">📍 <a class="detail-map-link" href="https://www.google.com/maps/search/?api=1&query=La+Burbuja+Villa+Maria+Velez+Sarsfield+497" target="_blank" rel="noopener">Bv. Vélez Sarsfield 497, Villa María, Córdoba</a></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- RIGHT: name, price, buy, whatsapp -->
+      <div class="detail-body">
+        <div>
+          <span class="detail-tag" id="detailTag"></span>
+          <div class="detail-title" id="detailTitle"></div>
+          <div class="detail-price-row">
+            <span class="detail-price" id="detailPrice"></span>
+            <span class="detail-price-note" id="detailPriceNote"></span>
+          </div>
+        </div>
+        <div class="detail-buy-card">
+          <div class="detail-buy-head">
+            <span class="detail-buy-head-t">Comprá acá</span>
+            <span class="detail-buy-head-price" id="detailHeadPrice"></span>
+          </div>
+          <div class="detail-buy-body">
+            <div class="detail-qty-row">
+              <span class="detail-qty-label">Cantidad</span>
+              <div class="detail-qty-controls">
+                <button type="button" onclick="detailUpdateQty(-1)" aria-label="Restar">&minus;</button>
+                <span class="detail-qty-value" id="detailQty">1</span>
+                <button type="button" onclick="detailUpdateQty(1)" aria-label="Sumar">+</button>
+              </div>
+            </div>
+            <div class="detail-subtotal">
+              <span class="detail-subtotal-l">Subtotal</span>
+              <span class="detail-subtotal-v" id="detailSubtotal">$0</span>
+            </div>
+            <button id="detailAddBtn" class="detail-add-btn" onclick="detailAddToCart()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 5v14M5 12h14"/></svg>
+              Agregar al carrito
+            </button>
+            <div class="detail-add-msg" id="detailAddMsg"></div>
+          </div>
+        </div>
+        <div class="detail-divider"></div>
+        <div>
+          <div class="detail-wa-label">¿Tenés dudas?</div>
+          <a id="detailWa" class="detail-wa-btn" href="#" target="_blank" rel="noopener">
+            <svg width="18" height="18" viewBox="0 0 24 24"><use href="#wa-icon"/></svg> Consultar por WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 </body>
