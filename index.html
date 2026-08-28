@@ -796,7 +796,8 @@
   .cart-fab { position: fixed; bottom: 28px; left: 28px; background: var(--navy); color: #fff;
     border: none; border-radius: 50px; padding: 12px 18px; cursor: pointer; font-size: .95rem;
     font-weight: 700; display: flex; align-items: center; gap: 8px; z-index: 999;
-    box-shadow: 0 4px 18px rgba(26,58,107,.4); transition: transform .2s, background .2s; }
+    box-shadow: 0 4px 18px rgba(26,58,107,.4); transition: transform .2s, background .2s, opacity .25s; }
+  .cart-fab.fab-hidden { opacity: 0; pointer-events: none; }
   .cart-fab:hover { transform: scale(1.06); background: var(--navy-mid); }
   .cart-fab svg { flex-shrink: 0; }
   .cart-badge { background: var(--sky); color: #fff; border-radius: 50%; width: 20px; height: 20px;
@@ -2645,6 +2646,22 @@ window.addEventListener('scroll', () => {
   navbar.classList.toggle('scrolled', window.scrollY > 40);
 }, { passive: true });
 
+// ── FLOATING CART FAB: auto-hide while scrolling down so it doesn't cover product buttons ──
+(function() {
+  const fab = document.getElementById('cartFab');
+  if (!fab) return;
+  let lastY = window.scrollY;
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    if (y > lastY && y > 120 && !fab.classList.contains('fab-hidden')) {
+      fab.classList.add('fab-hidden');
+    } else if (y <= lastY && fab.classList.contains('fab-hidden')) {
+      fab.classList.remove('fab-hidden');
+    }
+    lastY = y;
+  }, { passive: true });
+})();
+
 // ── HERO CAROUSEL ──
 const slides = document.querySelectorAll('.carousel-slide');
 const dots = document.querySelectorAll('.carousel-dot');
@@ -3156,6 +3173,19 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       btn.classList.remove('added');
       btn.innerHTML = origText;
     }, 1500);
+    updateCartBadge();
+    renderCart();
+  }
+
+  function addModalToCart(name, priceStr, imgSrc, qty, catName) {
+    qty = qty || 1;
+    const key = (name || '') + '|' + (imgSrc || '');
+    const existing = cart.find(i => i.key === key);
+    if (existing) {
+      existing.qty += qty;
+    } else {
+      cart.push({ key: key, name: name, cat: catName || '', qty: qty, img: imgSrc || '', price: priceStr || '' });
+    }
     updateCartBadge();
     renderCart();
   }
@@ -3713,6 +3743,15 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
     q('#detailDesc').textContent = info.desc || GENERIC.desc.split('\n')[0];
     q('#detailUse').textContent = info.use || GENERIC.use;
 
+    detailCat = '';
+    var catSection = card.closest('.product-category');
+    if (catSection) {
+      var catTitle = catSection.querySelector('.category-header-info h3');
+      if (catTitle) detailCat = catTitle.textContent.trim();
+    }
+    detailImgSrc = img ? img.src : '';
+    detailPriceStr = price || (info.price ? info.price : '');
+
     detailQty = 1;
     q('#detailQty').textContent = detailQty;
     q('#detailAddMsg').textContent = '';
@@ -3745,6 +3784,9 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
 
   var detailQty = 1;
   var detailPriceNum = 0;
+  var detailCat = '';
+  var detailImgSrc = '';
+  var detailPriceStr = '';
 
   function updateDetailWa() {
     var msg = 'Hola! Consulto por ' + (q('#detailTitle').textContent || '') +
@@ -3770,8 +3812,13 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
     var btn = q('#detailAddBtn');
     var msg = q('#detailAddMsg');
     var name = q('#detailTitle').textContent;
+    var priceStr = detailPriceStr || (q('#detailHeadPrice').textContent || '');
+    if (priceStr === 'Consultar') priceStr = '';
     btn.classList.add('added');
     btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg> ¡Agregado al carrito!';
+    if (typeof window.addModalToCart === 'function') {
+      window.addModalToCart(name, priceStr, detailImgSrc, detailQty, detailCat);
+    }
     var total = detailPriceNum * detailQty;
     msg.textContent = detailQty + 'x ' + name + (total ? ' - $' + total.toLocaleString('es-AR') : '');
     setTimeout(function() {
