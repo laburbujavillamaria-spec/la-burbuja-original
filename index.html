@@ -4066,23 +4066,51 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       tag: 'Saphirus · Sensaciones 8 g',
       desc: 'Aromatizante Saphirus Sensaciones en gel de 8 g para espacios reducidos, con una duración aproximada de 30 días.',
       use: 'Abrir el gel, retirar el film protector y colocar en su soporte armado con el mismo empaque.'
+    },
+    'gamuza-sintetica-laffitte-pa-o-chamois-tama-o-normal': {
+      tag: 'Laffitte · Chamois 43x32',
+      desc: 'Paño sintético Laffitte Chamois de PVA de 43x32 cm, súper absorbente; no raya ni deja vetas o pelusa. Viene en tubo plástico reutilizable.',
+      use: 'Usar húmedo; si está seco, remojar para revitalizar y guardar apenas húmedo en su envase.'
+    },
+    'gamuza-sintetica-laffitte-pa-o-chamois-tama-o-xl': {
+      tag: 'Laffitte · Chamois XL 43x64',
+      desc: 'Paño sintético Laffitte Chamois XL de PVA de 43x64 cm, de extraordinaria absorción; remueve polvo y manchas con mayor durabilidad.',
+      use: 'Usar húmedo, lavar con agua caliente y detergente suave y guardar húmedo en su estuche.'
+    },
+    'pa-o-de-microfibra-full-car-rojo-60x40cm': {
+      tag: 'Full Car · 60x40',
+      desc: 'Paño de microfibra Full Car rojo de 60x40 cm, de doble cara: limpia, seca y da brillo al mismo tiempo, eficaz incluso solo con agua.',
+      use: 'Usar seco o húmedo, sin detergentes.'
+    },
+    'pa-o-de-microfibra-laffitte-vidrios-30x35cm': {
+      tag: 'Laffitte · Vidrios 30x35',
+      desc: 'Paño de microfibra Laffitte para vidrios de 30x35 cm, de textura suave con microcanales; atrapa suciedad y polvillo sin marcas ni pelusa.',
+      use: 'Limpiar y secar cristales y espejos.'
+    },
+    'pa-o-de-microfibra-tipo-wafle-laffitte-40x60-cm': {
+      tag: 'Laffitte · Waffle 40x60',
+      desc: 'Paño de microfibra Laffitte tipo waffle de 40x60 cm, con efecto remolino que direcciona el agua; absorbe hasta 7 veces su peso para un secado ultra rápido, sin marcas ni olores.',
+      use: 'Extender sobre la superficie mojada para el secado final.'
+    },
+    'pa-o-lupa-walker': {
+      tag: 'Walker · Lupa siliconada',
+      desc: 'Paño limpiador Walker Lupa con siliconas, de unos 45x52 cm, para quitar el polvo del auto o la moto.',
+      use: 'Pasar en seco para lustrar y quitar el polvo.'
+    },
+    'pa-o-lupa': {
+      tag: 'Lupa · Con siliconas',
+      desc: 'Paño limpiador Lupa nacional con siliconas; no mancha ni raya.',
+      use: 'No lavar ni agregar sustancias; solo sacudir suave y guardar en su envase.'
+    },
+    'silicona-full-car-emulsi-n-de-silicona-x1lt-hidratador-de-pl-sticos': {
+      tag: 'Full Car · Protectant · 1 Litro',
+      desc: 'Emulsión de siliconas Full Car (Protectant) en base acuosa, aromatizada y libre de solventes; para cueros, plásticos y vinilos, filtra UV, da brillo y renueva el color sin dejar grasoso.',
+      use: 'Aplicar sobre la superficie limpia y seca, esparcir parejo y repasar con franela para lograr brillo.'
     }
   };
   var GENERIC = {
     desc: 'Producto de excelente calidad, seleccionado especialmente para que tu hogar o negocio quede siempre limpio y cuidado. Consultanos por este y muchos otros artículos de limpieza.',
     use: 'Seguí las indicaciones del envase del producto. Ante dudas sobre su uso o dosificación, consultanos por WhatsApp y te asesoramos sin compromiso.'
-  };
-  // Alias: el slug() no quita tildes/ñ (ej. "paño" -> "pa-o"), así que estos
-  // nombres generan una clave distinta a la ficha con tildes normalizadas.
-  var DESC_ALIAS = {
-    'gamuza-sintetica-laffitte-pa-o-chamois-tama-o-normal': 'gamuza-sintetica-laffitte-pano-chamois-tamano-normal',
-    'gamuza-sintetica-laffitte-pa-o-chamois-tama-o-xl': 'gamuza-sintetica-laffitte-pano-chamois-tamano-xl',
-    'pa-o-de-microfibra-full-car-rojo-60x40cm': 'pano-de-microfibra-full-car-rojo-60x40cm',
-    'pa-o-de-microfibra-laffitte-vidrios-30x35cm': 'pano-de-microfibra-laffitte-vidrios-30x35cm',
-    'pa-o-de-microfibra-tipo-wafle-laffitte-40x60-cm': 'pano-de-microfibra-tipo-wafle-laffitte-40x60-cm',
-    'pa-o-lupa-walker': 'pano-lupa-walker',
-    'pa-o-lupa': 'pano-lupa',
-    'silicona-full-car-emulsi-n-de-silicona-x1lt-hidratador-de-pl-sticos': 'silicona-full-car-emulsion-de-silicona-x1lt-hidratador-de-plasticos'
   };
 
   function slug(name) {
