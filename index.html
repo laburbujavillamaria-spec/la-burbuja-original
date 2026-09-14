@@ -528,7 +528,7 @@
   .detail-loc { font-size: .68rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
     padding: 5px 12px; border-radius: 20px; background: #f1f5fa; color: #5b6b82; }
   .detail-title { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--navy); margin: 0;
-    line-height: 1.15; letter-spacing: -.01em; }
+    line-height: 1.15; letter-spacing: -.01em; text-transform: uppercase; }
   .detail-price-row { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
   .detail-price { font-size: 1.7rem; font-weight: 900; color: #fff;
     background: linear-gradient(135deg, var(--navy), var(--navy-mid));
@@ -603,9 +603,16 @@
   }
   @media (max-width: 760px) {
     .detail-grid { grid-template-columns: 1fr; min-height: 0; }
-    .detail-gallery { min-height: 380px; }
-    .detail-gallery-view { min-height: 360px; }
-    .detail-body { padding: 20px 16px 18px; }
+    .detail-gallery { min-height: 320px; }
+    .detail-gallery-view { min-height: 300px; }
+    .detail-body { padding: 16px 14px 14px; }
+    .detail-title { font-size: 1.28rem; line-height: 1.2; }
+    .detail-price-row { margin-top: 10px; }
+    .detail-price { font-size: 1.45rem; }
+    .detail-buy-card { margin-top: 14px; }
+    .detail-divider { margin: 14px 0; }
+    .detail-add-btn { padding: 12px; margin-top: 10px; }
+    .detail-wa-btn { padding: 12px; }
   }
 
   /* ── CONTACT ── */
