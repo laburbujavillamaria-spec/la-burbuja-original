@@ -481,19 +481,19 @@
     display: flex; align-items: center; justify-content: center; padding: 20px;
     opacity: 0; pointer-events: none; transition: opacity .28s; }
   .detail-overlay.open { opacity: 1; pointer-events: all; }
-  .detail-modal { background: #fff; border-radius: 18px; max-width: 940px; width: 100%;
+  .detail-modal { background: #fff; border-radius: 26px; max-width: 940px; width: 100%;
     max-height: 92vh; overflow-y: auto; position: relative; box-shadow: 0 20px 60px rgba(0,0,0,.4);
     transform: translateY(14px) scale(.98); transition: transform .28s; }
   .detail-overlay.open .detail-modal { transform: translateY(0) scale(1); }
-  .detail-close { position: absolute; top: 14px; right: 14px; z-index: 5; width: 38px; height: 38px;
-    border-radius: 50%; border: none; background: rgba(26,58,107,.12); color: var(--navy);
+  .detail-close { position: absolute; top: 14px; right: 14px; z-index: 5; width: 34px; height: 34px;
+    border-radius: 50%; border: none; background: #eef3f9; color: var(--navy);
     font-size: 1.25rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
     transition: background .2s, color .2s; }
   .detail-close:hover { background: var(--navy); color: #fff; }
   .detail-grid { display: grid; grid-template-columns: 1fr 1fr; min-height: 540px; }
   /* Left: selectable photo / desc */
   .detail-gallery { display: flex; flex-direction: column; background: linear-gradient(135deg, #eef6fb, #f8fcfe); }
-  .detail-gallery-tabs { display: flex; gap: 8px; padding: 16px 16px 0; }
+  .detail-gallery-tabs { display: flex; gap: 8px; padding: 16px 60px 0 16px; }
   .detail-gallery-tab { flex: 1; border: 2px solid rgba(26,58,107,.15); background: #fff; color: var(--navy);
     font-weight: 800; font-size: .8rem; padding: 9px 6px; border-radius: 12px; cursor: pointer;
     transition: background .2s, border-color .2s, color .2s; }
@@ -503,7 +503,7 @@
     padding: 24px; opacity: 0; pointer-events: none; transition: opacity .25s; }
   .detail-overlay.open .detail-gallery-pane.active { opacity: 1; pointer-events: all; }
   .detail-photo { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 12px;
-    box-shadow: 0 8px 28px rgba(26,58,107,.2); }
+    border: 1px solid #e3edf4; box-shadow: 0 8px 28px rgba(26,58,107,.2); }
   .detail-desc-pane { width: 100%; height: 100%; overflow-y: auto; border-radius: 12px; padding: 20px;
     display: flex; flex-direction: column; gap: 14px; }
   .detail-desc-pane h4 { font-size: .8rem; font-weight: 900; color: var(--sky); text-transform: uppercase;
@@ -523,11 +523,16 @@
   .detail-body { padding: 30px 30px 26px; display: flex; flex-direction: column; }
   .detail-tag { display: inline-block; background: rgba(77,200,216,.14); color: var(--sky);
     font-size: .68rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
-    padding: 5px 12px; border-radius: 20px; width: fit-content; margin-bottom: 14px; }
+    padding: 5px 12px; border-radius: 20px; width: fit-content; margin: 0; }
+  .detail-tags { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 14px; }
+  .detail-loc { font-size: .68rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+    padding: 5px 12px; border-radius: 20px; background: #f1f5fa; color: #5b6b82; }
   .detail-title { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--navy); margin: 0;
     line-height: 1.15; letter-spacing: -.01em; }
   .detail-price-row { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
-  .detail-price { font-size: 1.75rem; font-weight: 900; color: var(--navy); }
+  .detail-price { font-size: 1.7rem; font-weight: 900; color: #fff;
+    background: linear-gradient(135deg, var(--navy), var(--navy-mid));
+    padding: 6px 20px; border-radius: 16px; letter-spacing: .01em; }
   .detail-price-note { font-size: .76rem; font-weight: 700; color: #7d8ca8; }
   .detail-buy-card { margin-top: 24px; border: 2px solid #dde7f2; border-radius: 18px;
     overflow: hidden; box-shadow: 0 10px 26px rgba(26,58,107,.14); background: #fff; }
@@ -574,6 +579,9 @@
     font-weight: 800; font-size: .98rem; cursor: pointer; text-decoration: none;
     box-shadow: 0 6px 18px rgba(37,211,102,.25); transition: transform .2s, box-shadow .2s, background .2s; }
   .detail-wa-btn:hover { background: #1ebe5b; transform: translateY(-1px); box-shadow: 0 8px 22px rgba(37,211,102,.32); }
+  .detail-eyebrow { grid-column: 1 / -1; font-size: .68rem; font-weight: 900; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--sky); padding: 18px 60px 0 20px; }
+  .detail-fine { text-align: center; font-size: .72rem; font-weight: 600; color: #8ba0bc; margin-top: 10px; }
   @media (min-width: 761px) {
     .detail-grid { min-height: 0; }
     .detail-body { padding: 22px 26px 20px; }
@@ -6357,6 +6365,7 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
   <div class="detail-modal" role="dialog" aria-modal="true" aria-label="Detalle del producto">
     <button class="detail-close" onclick="closeDetail()" aria-label="Cerrar">&times;</button>
     <div class="detail-grid">
+      <div class="detail-eyebrow">La Burbuja · Villa María</div>
       <!-- LEFT: selectable photo / desc -->
       <div class="detail-gallery">
         <div class="detail-gallery-tabs">
@@ -6392,7 +6401,7 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       <!-- RIGHT: name, price, buy, whatsapp -->
       <div class="detail-body">
         <div>
-          <span class="detail-tag" id="detailTag"></span>
+          <div class="detail-tags"><span class="detail-tag" id="detailTag"></span><span class="detail-loc">Villa María · Cba.</span></div>
           <div class="detail-title" id="detailTitle"></div>
           <div class="detail-price-row">
             <span class="detail-price" id="detailPrice"></span>
@@ -6437,6 +6446,7 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
           <a id="detailWa" class="detail-wa-btn" href="#" target="_blank" rel="noopener">
             <svg width="18" height="18" viewBox="0 0 24 24"><use href="#wa-icon"/></svg> Consultar por WhatsApp
           </a>
+          <div class="detail-fine">Envío gratis desde $30.000</div>
         </div>
       </div>
     </div>
