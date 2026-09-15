@@ -368,10 +368,18 @@
   .product-search.has-text .search-clear { display: block; }
   .product-category.search-hidden { display: none; }
   .product-card.search-hidden { display: none; }
-  .no-results { text-align: center; padding: 40px 20px; color: var(--gray); font-size: .95rem;
-    display: none; }
-  .no-results #noResultsQuery { font-weight: 800; color: var(--navy); }
-  .no-results-hint { display: block; margin-top: 8px; font-size: .82rem; color: #9aa7ba; font-weight: 600; }
+  .no-results { text-align: center; padding: 48px 24px; color: var(--navy); font-size: 1.05rem;
+    font-weight: 700; display: none; max-width: 560px; margin: 0 auto; }
+  .no-results-icon { width: 72px; height: 72px; border-radius: 50%; margin: 0 auto 18px;
+    background: rgba(77,200,216,.14); border: 2px dashed rgba(77,200,216,.5);
+    display: flex; align-items: center; justify-content: center; }
+  .no-results-title { font-size: 1.18rem; font-weight: 800; color: #1A3A6B; line-height: 1.45; }
+  .no-results #noResultsQuery { font-weight: 900; color: #000; }
+  .no-results-hint { display: block; margin-top: 8px; font-size: .9rem; color: #7d8ca8; font-weight: 600; }
+  .no-results-btn { margin-top: 18px; padding: 11px 28px; border-radius: 30px; cursor: pointer;
+    border: 2px solid var(--sky); background: #fff; color: var(--navy);
+    font-family: 'Nunito', sans-serif; font-weight: 800; font-size: .9rem; transition: background .2s, color .2s; }
+  .no-results-btn:hover { background: var(--sky); color: #fff; }
   .section-header h2 { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--navy); }
   .section-header p { color: var(--gray); margin-top: 6px; }
   .products-container { display: flex; flex-direction: column; gap: 48px; overflow: hidden; }
@@ -1430,7 +1438,7 @@
     <button class="search-clear" onclick="clearSearch()">✕</button>
   </div>
   <div class="products-container">
-    <div class="no-results" id="noResults">No encontramos nada para "<span id="noResultsQuery"></span>"<br><span class="no-results-hint">Escríbelo de otra forma y vuelve a intentar.</span></div>
+    <div class="no-results" id="noResults"><div class="no-results-icon"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#1A3A6B" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></div><div class="no-results-title">No encontramos nada para &ldquo;<span id="noResultsQuery"></span>&rdquo;</div><span class="no-results-hint">Escr&iacute;belo de otra forma y vuelve a intentar.</span><button type="button" class="no-results-btn" onclick="clearSearch()">Ver todos los productos</button></div>
 
     <!-- LIQUIDOS -->
     <div class="product-category" id="cat-liquidos">
