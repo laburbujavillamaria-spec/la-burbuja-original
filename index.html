@@ -370,6 +370,8 @@
   .product-card.search-hidden { display: none; }
   .no-results { text-align: center; padding: 40px 20px; color: var(--gray); font-size: .95rem;
     display: none; }
+  .no-results #noResultsQuery { font-weight: 800; color: var(--navy); }
+  .no-results-hint { display: block; margin-top: 8px; font-size: .82rem; color: #9aa7ba; font-weight: 600; }
   .section-header h2 { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--navy); }
   .section-header p { color: var(--gray); margin-top: 6px; }
   .products-container { display: flex; flex-direction: column; gap: 48px; overflow: hidden; }
@@ -1428,7 +1430,7 @@
     <button class="search-clear" onclick="clearSearch()">✕</button>
   </div>
   <div class="products-container">
-    <div class="no-results" id="noResults">No se encontraron productos 😕</div>
+    <div class="no-results" id="noResults">No encontramos nada para "<span id="noResultsQuery"></span>"<br><span class="no-results-hint">Escríbelo de otra forma y vuelve a intentar.</span></div>
 
     <!-- LIQUIDOS -->
     <div class="product-category" id="cat-liquidos">
@@ -3561,7 +3563,14 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       }
     });
 
-    document.getElementById('noResults').style.display = (visibleCount === 0 && q.length > 0) ? 'block' : 'none';
+    var noResBox = document.getElementById('noResults');
+    if (visibleCount === 0 && q.length > 0) {
+      var rawQ = document.getElementById('navSearchInput').value.trim() || document.getElementById('productSearchInput').value.trim() || val.trim();
+      document.getElementById('noResultsQuery').textContent = rawQ;
+      noResBox.style.display = 'block';
+    } else {
+      noResBox.style.display = 'none';
+    }
   }
 
   function clearSearch() {
