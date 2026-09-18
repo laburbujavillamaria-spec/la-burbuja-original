@@ -420,12 +420,15 @@
     background: linear-gradient(135deg, #f5f7fa, #e8ecf1);
     width: fit-content; margin: 0 auto; box-shadow: 0 2px 6px rgba(0,0,0,.06); }
   .discount-badge { position: absolute; top: 8px; left: 8px; z-index: 3;
-    background: #e53935; color: #fff; font-weight: 900; font-size: .72rem;
-    padding: 3px 8px; border-radius: 8px; box-shadow: 0 2px 6px rgba(229,57,53,.4);
-    letter-spacing: .02em; }
-  .product-card-discounted { position: relative; }
-  .product-card-price-old { display: block; font-weight: 700; font-size: .8rem; color: #999;
+    background: linear-gradient(135deg, #ff6b6b, #e11d48); color: #fff; font-weight: 900; font-size: .78rem;
+    padding: 4px 10px; border-radius: 10px; box-shadow: 0 3px 10px rgba(225,29,72,.5);
+    letter-spacing: .03em; }
+  .discount-badge::after { content: " · OFERTA"; }
+  .product-card-discounted { position: relative;
+    background: linear-gradient(180deg, #fff5f6 0%, #ffffff 45%); }
+  .product-card-price-old { display: block; font-weight: 800; font-size: .85rem; color: #b91c1c;
     text-decoration: line-through; text-align: center; margin: 0 auto; }
+  .product-card-price-old::before { content: "Antes "; font-weight: 700; display: inline-block; text-decoration: none; }
   .unit-row { display: flex; align-items: center; justify-content: center; gap: 6px;
     margin: 0 auto; padding: 3px 8px; border-radius: 8px; width: fit-content;
     background: rgba(37,211,102,.08); }
@@ -3213,7 +3216,22 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
 
 
   // ===== CARRITO DE COMPRAS =====
-  let cart = [];
+  var CART_KEY = 'laburbuja_cart_v1';
+  function saveCart() {
+    try { localStorage.setItem(CART_KEY, JSON.stringify(cart)); } catch (e) { /* modo privado: no se puede guardar */ }
+  }
+  function loadCart() {
+    try {
+      var raw = localStorage.getItem(CART_KEY);
+      if (!raw) return [];
+      var data = JSON.parse(raw);
+      if (!Array.isArray(data)) return [];
+      return data.filter(function(i){ return i && i.name && i.qty > 0; }).map(function(i){
+        return { key: String(i.key || (i.name + '|' + (i.img || ''))), name: String(i.name), cat: String(i.cat || ''), qty: Number(i.qty) || 1, img: String(i.img || ''), price: String(i.price || '') };
+      });
+    } catch (e) { return []; }
+  }
+  let cart = loadCart();
 
   function openCart() {
     document.getElementById('cartPanel').classList.add('open');
@@ -3424,6 +3442,7 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
   }
 
   function renderCart() {
+    saveCart();
     const list = document.getElementById('cartItemsList');
     const empty = document.getElementById('cartEmpty');
     const footer = document.getElementById('cartFooter');
@@ -3478,10 +3497,15 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       '</div>';
     }).join('');
 
+    var noteEl = document.querySelector('.cart-total-note');
     if (total > 0) {
-      subtotalEl.textContent = '$' + total.toLocaleString('es-AR') + (allHavePrices ? '' : ' *');
+      subtotalEl.textContent = '$' + total.toLocaleString('es-AR');
+      if (noteEl) noteEl.textContent = allHavePrices
+        ? '* La disponibilidad se confirma al consultar. El pedido se enviará por WhatsApp.'
+        : '* Subtotal parcial: algunos precios se confirman por WhatsApp.';
     } else {
       subtotalEl.textContent = 'A confirmar';
+      if (noteEl) noteEl.textContent = '* Los precios se confirman por WhatsApp al consultar disponibilidad.';
     }
   }
 
@@ -3506,13 +3530,19 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       }
       msg += '\n';
     });
-    if (allHavePrices && total > 0) {
-      msg += '\n💰 Total: $' + total.toLocaleString('es-AR');
+    var totalItems = cart.reduce(function(s, i){ return s + (Number(i.qty) || 0); }, 0);
+    msg += '\n🧾 Total de productos: ' + totalItems;
+    if (total > 0) {
+      msg += '\n💰 Subtotal: $' + total.toLocaleString('es-AR') + (allHavePrices ? '' : ' (algunos precios a confirmar)');
     }
     msg += '\n\n¿Me pueden confirmar disponibilidad? Gracias!';
     const waNum = '5493534012349';
     location.href = 'https://wa.me/' + waNum + '?text=' + encodeURIComponent(msg);
   }
+
+  // Restaurar carrito guardado al cargar la página
+  updateCartBadge();
+  renderCart();
 
   // Product search
   var _cachedCards = null;
