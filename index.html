@@ -935,6 +935,7 @@
     transition: background .2s, border-color .2s; user-select: none; }
   .qty-btn:hover { background: var(--sky); color: #fff; border-color: var(--sky); }
   .qty-value { min-width: 22px; text-align: center; font-weight: 800; font-size: .85rem; color: var(--navy); }
+  .qty-unit { font-size: .85rem; font-weight: 800; color: #000; margin-left: -4px; text-transform: lowercase; }
 
   /* ── VISTA QUIÉNES SOMOS ── */
   .nosotros-view-overlay { position: fixed; inset: 0; background: rgba(13,31,60,.55); z-index: 2500;
@@ -3214,6 +3215,28 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
 });
 
 
+
+  // ── Unidades litro: los productos x1lt llevan etiqueta "litro"; solo algunos permiten fraccion 0.5 ──
+  var LT_WHOLE = ['citroxan','pulverizadores gyber','curador zelnova','destapacanerias','fluido triunfo','lavandina ayudin','acido muriatico volker','vinagre de alcohol casalta','clarificante botella','mak clarificante','ropa blanca liquida','downy concetrado','suavizante confort concentrado','trenet oxi','alcohol de quemar porta','alcohol puro porta'];
+  function ltNorm(s){ return (s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
+  (function markLiterCards(){
+    document.querySelectorAll('.product-card').forEach(function(card){
+      var nameEl = card.querySelector('.product-card-name');
+      if (!nameEl || !/x\s*1\s*lt/i.test(nameEl.textContent)) return;
+      card.setAttribute('data-unit', 'Litro');
+      var qc = card.querySelector('.qty-controls');
+      if (!qc) return;
+      var whole = LT_WHOLE.some(function(k){ return ltNorm(nameEl.textContent).indexOf(k) !== -1; });
+      qc.setAttribute('data-step', whole ? '1' : '0.5');
+      if (!qc.querySelector('.qty-unit')) {
+        var u = document.createElement('span');
+        u.className = 'qty-unit';
+        u.textContent = 'Litro';
+        var val = qc.querySelector('.qty-value');
+        if (val && val.after) val.after(u); else qc.appendChild(u);
+      }
+    });
+  })();
 
   // ===== CARRITO DE COMPRAS =====
   var CART_KEY = 'laburbuja_cart_v1';
