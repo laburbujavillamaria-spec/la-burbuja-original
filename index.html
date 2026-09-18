@@ -3217,7 +3217,7 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
 
 
   // ── Unidades litro: los productos x1lt llevan etiqueta "litro"; solo algunos permiten fraccion 0.5 ──
-  var LT_WHOLE = ['citroxan','pulverizadores gyber','curador zelnova','destapacanerias','fluido triunfo','lavandina ayudin','acido muriatico volker','vinagre de alcohol casalta','clarificante botella','mak clarificante','ropa blanca liquida','downy concetrado','suavizante confort concentrado','trenet oxi','alcohol de quemar porta','alcohol puro porta'];
+  var LT_WHOLE = ['citroxan','pulverizadores gyber','pulverizadores make','curador zelnova','destapacanerias','fluido triunfo','lavandina ayudin','acido muriatico volker','vinagre de alcohol casalta','clarificante botella','mak clarificante','ropa blanca liquida','downy concetrado','suavizante confort concentrado','trenet oxi','alcohol de quemar porta','alcohol puro porta'];
   function ltNorm(s){ return (s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
   (function markLiterCards(){
     document.querySelectorAll('.product-card').forEach(function(card){
