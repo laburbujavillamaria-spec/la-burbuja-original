@@ -6285,6 +6285,18 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
 
     q('#detailPhoto').src = img ? img.src : '';
     q('#detailPhoto').alt = name;
+    (function upgradeDetailPhoto(src) {
+      if (!src) return;
+      var hd = src
+        .replace(/(^|\/)productos\//i, '$1productos_hd/')
+        .replace(/\.(png|jpe?g|webp|gif|bmp|jfif|tiff)$/i, '.jpg');
+      if (hd !== src) {
+        var probe = new Image();
+        probe.onload = function() { q('#detailPhoto').src = hd; };
+        probe.onerror = function() { /* mantener version original */ };
+        probe.src = hd;
+      }
+    })(img ? img.src : '');
     q('#detailTitle').textContent = name;
     q('#detailTag').textContent = info.tag || 'Artículo de limpieza';
     q('#detailPrice').textContent = price || (info.price ? info.price : 'Consultar');
