@@ -3696,6 +3696,15 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
     }
   }
   var _liveT = null;
+  function keepSearchVisible() {
+    const sec = document.querySelector('.products-section');
+    if (!sec) return;
+    const top = sec.getBoundingClientRect().top + window.pageYOffset - 160;
+    const maxY = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+    if (window.pageYOffset > maxY + 4 || window.pageYOffset < top - window.innerHeight) {
+      window.scrollTo(0, Math.min(Math.max(top, 0), maxY));
+    }
+  }
   function liveSearch(src) {
     const inp = src === 'nav' ? document.getElementById('navSearchInput') : document.getElementById('productSearchInput');
     const other = src === 'nav' ? document.getElementById('productSearchInput') : document.getElementById('navSearchInput');
@@ -3708,6 +3717,7 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
     if (pc) pc.classList.toggle('has-text', has);
     document.body.classList.toggle('ig-searching', inp.value.trim().length > 0);
     filterProducts(inp.value);
+    keepSearchVisible();
   }
   function bindLiveSearch() {
     [['nav', 'navSearchInput'], ['prod', 'productSearchInput']].forEach(pair => {
