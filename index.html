@@ -380,6 +380,8 @@
     border: 2px solid var(--sky); background: #fff; color: var(--navy);
     font-family: 'Nunito', sans-serif; font-weight: 800; font-size: .9rem; transition: background .2s, color .2s; }
   .no-results-btn:hover { background: var(--sky); color: #fff; }
+  .search-count { text-align: center; font-size: .85rem; font-weight: 700; color: var(--navy); margin: 10px auto 0; display: none; }
+  .product-card-name mark { background: rgba(77,200,216,.45); border-radius: 3px; padding: 0 1px; }
   .section-header h2 { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--navy); }
   .section-header p { color: var(--gray); margin-top: 6px; }
   .products-container { display: flex; flex-direction: column; gap: 48px; overflow: hidden; }
@@ -1441,6 +1443,7 @@
     <input type="text" id="productSearchInput" placeholder="Buscá tu producto..." onkeydown="if(event.key==='Enter')productSearch()">
     <button class="search-clear" onclick="clearSearch()">✕</button>
   </div>
+  <div class="search-count" id="searchCount"></div>
   <div class="products-container">
     <div class="no-results" id="noResults"><div class="no-results-icon"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#1A3A6B" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></div><div class="no-results-title">No encontramos nada para &ldquo;<span id="noResultsQuery"></span>&rdquo;</div><span class="no-results-hint">Escr&iacute;belo de otra forma y vuelve a intentar.</span><button type="button" class="no-results-btn" onclick="clearSearch()">Ver todos los productos</button></div>
 
@@ -3577,53 +3580,86 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
   // Product search
   var _cachedCards = null;
   var _cachedCats = null;
+  function normT(s) {
+    return (s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
+  function escRe(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+  function flexRe(word) {
+    const map = { a:'áàäâ', e:'éèëê', i:'íìïî', o:'óòöô', u:'úùüû', n:'ñ', c:'ç' };
+    return word.toLowerCase().split('').map(ch => {
+      const b = normT(ch);
+      if (!/[a-z0-9]/.test(b)) return escRe(ch);
+      const v = map[b] ? b + map[b] : b;
+      return '[' + v + ']';
+    }).join('');
+  }
+  function highlightCard(card, words) {
+    const nameEl = card.querySelector('.product-card-name');
+    if (!nameEl) return;
+    if (!nameEl.dataset.orig) nameEl.dataset.orig = nameEl.innerHTML;
+    let html = nameEl.dataset.orig;
+    words.forEach(w => {
+      if (!w) return;
+      try { html = html.replace(new RegExp('(' + flexRe(w) + ')', 'gi'), '<mark>$1</mark>'); } catch (e) {}
+    });
+    nameEl.innerHTML = html;
+  }
+  function unhighlightCard(card) {
+    const nameEl = card.querySelector('.product-card-name');
+    if (nameEl && nameEl.dataset.orig) nameEl.innerHTML = nameEl.dataset.orig;
+  }
   function filterProducts(val) {
-    const q = val.trim().toLowerCase();
+    const raw = val.trim();
+    const words = normT(raw).split(/\s+/).filter(Boolean);
+    const rawWords = raw.split(/\s+/).filter(Boolean);
     const container = document.querySelector('.product-search');
-    const clearBtn = container.querySelector('.search-clear');
-    if(q.length > 0) { container.classList.add('has-text'); } else { container.classList.remove('has-text'); }
+    if(raw.length > 0) { container.classList.add('has-text'); } else { container.classList.remove('has-text'); }
 
     if (!_cachedCards) _cachedCards = document.querySelectorAll('.product-card');
     if (!_cachedCats) _cachedCats = document.querySelectorAll('.product-category');
     const cards = _cachedCards;
-    let visibleCount = 0;
 
     cards.forEach(card => {
-      const name = card.querySelector('.product-card-name').textContent.toLowerCase();
-      if(q.length === 0 || name.includes(q)) {
+      const nameEl = card.querySelector('.product-card-name');
+      const nameT = normT(nameEl ? nameEl.textContent : '');
+      const cat = card.closest('.product-category');
+      const h3 = cat ? cat.querySelector('.category-header-info h3') : null;
+      const catT = normT(h3 ? h3.textContent : '');
+      const priceEl = card.querySelector('.product-card-price') || card.querySelector('.unit-price');
+      const priceT = normT(priceEl ? priceEl.textContent : '');
+      let hay = nameT + ' ' + catT + ' ' + priceT;
+      try {
+        if (typeof sellerDesc !== 'undefined' && nameEl) {
+          const info = sellerDesc[slug(nameEl.textContent.trim())] || {};
+          hay += ' ' + normT((info.tag || '') + ' ' + (info.desc || '') + ' ' + (info.use || ''));
+        }
+      } catch (e) {}
+      const ok = words.length === 0 || words.every(w => hay.includes(w));
+      const catOk = words.length > 0 && words.every(w => catT.includes(w));
+      if (ok || catOk) {
         card.classList.remove('search-hidden');
-        visibleCount++;
+        if (words.length > 0) highlightCard(card, rawWords);
+        else unhighlightCard(card);
       } else {
         card.classList.add('search-hidden');
-      }
-    });
-
-    // Show all products in categories whose name matches the query
-    _cachedCats.forEach(cat => {
-      const h3 = cat.querySelector('.category-header-info h3');
-      const catMatch = h3 && h3.textContent.toLowerCase().includes(q);
-      if(q.length > 0 && catMatch) {
-        cat.querySelectorAll('.product-card').forEach(card => {
-          card.classList.remove('search-hidden');
-          visibleCount++;
-        });
+        unhighlightCard(card);
       }
     });
 
     // Hide empty categories + toggle accordion during search
     _cachedCats.forEach(cat => {
       const visible = cat.querySelectorAll('.product-card:not(.search-hidden)').length;
-      if(visible === 0 && q.length > 0) {
+      if(visible === 0 && raw.length > 0) {
         cat.classList.add('search-hidden');
         cat.classList.remove('cat-open');
       } else {
         cat.classList.remove('search-hidden');
-        if(q.length > 0 && visible > 0) {
+        if(raw.length > 0 && visible > 0) {
           cat.classList.add('cat-open');
           var btn = cat.querySelector('.cat-toggle-btn');
           if(btn) btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 15l-6-6-6 6"/></svg> Contraer categoría';
         }
-        if(q.length === 0) {
+        if(raw.length === 0) {
           cat.classList.remove('cat-open');
           var btn = cat.querySelector('.cat-toggle-btn');
           if(btn) btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg> Desplegar productos';
@@ -3631,8 +3667,18 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       }
     });
 
+    var n = document.querySelectorAll('.product-card:not(.search-hidden)').length;
+    var countEl = document.getElementById('searchCount');
+    if (countEl) {
+      if (raw.length > 0) {
+        countEl.textContent = n === 1 ? '1 producto encontrado' : n + ' productos encontrados';
+        countEl.style.display = 'block';
+      } else {
+        countEl.style.display = 'none';
+      }
+    }
     var noResBox = document.getElementById('noResults');
-    if (visibleCount === 0 && q.length > 0) {
+    if (n === 0 && raw.length > 0) {
       var rawQ = document.getElementById('navSearchInput').value.trim() || document.getElementById('productSearchInput').value.trim() || val.trim();
       document.getElementById('noResultsQuery').textContent = rawQ;
       noResBox.style.display = 'block';
@@ -3640,6 +3686,34 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       noResBox.style.display = 'none';
     }
   }
+  var _liveT = null;
+  function liveSearch(src) {
+    const inp = src === 'nav' ? document.getElementById('navSearchInput') : document.getElementById('productSearchInput');
+    const other = src === 'nav' ? document.getElementById('productSearchInput') : document.getElementById('navSearchInput');
+    if (!inp) return;
+    if (other) other.value = inp.value;
+    const c = document.getElementById('navSearch');
+    const pc = document.querySelector('.product-search');
+    const has = inp.value.length > 0;
+    if (c) c.classList.toggle('has-text', has);
+    if (pc) pc.classList.toggle('has-text', has);
+    document.body.classList.toggle('ig-searching', inp.value.trim().length > 0);
+    filterProducts(inp.value);
+  }
+  function bindLiveSearch() {
+    [['nav', 'navSearchInput'], ['prod', 'productSearchInput']].forEach(pair => {
+      const el = document.getElementById(pair[1]);
+      if (!el || el.dataset.liveBound) return;
+      el.dataset.liveBound = '1';
+      el.addEventListener('input', function() {
+        clearTimeout(_liveT);
+        const src = pair[0];
+        _liveT = setTimeout(function() { liveSearch(src); }, 150);
+      });
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bindLiveSearch);
+  else bindLiveSearch();
 
   function clearSearch() {
     document.getElementById('productSearchInput').value = '';
