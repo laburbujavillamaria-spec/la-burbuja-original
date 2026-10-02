@@ -910,7 +910,7 @@
     display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
   .cart-total-note { font-size: .75rem; color: #888; margin-bottom: 14px; }
   .ship-bar { background: #fff; border: 2px solid rgba(77,200,216,.4); border-radius: 14px;
-    padding: 12px 14px; margin-bottom: 12px; }
+    padding: 12px 14px; margin-top: 12px; }
   .ship-bar.done { border-color: #25D366; background: #f0fdf4; }
   .ship-bar-msg { font-size: .85rem; font-weight: 800; color: var(--navy); margin-bottom: 8px; text-align: center; }
   .ship-bar.done .ship-bar-msg { color: #128C7E; }
@@ -1198,10 +1198,6 @@
     <div id="cartItemsList"></div>
   </div>
   <div class="cart-footer" id="cartFooter" style="display:none">
-    <div class="ship-bar" id="shipBar" style="display:none">
-      <div class="ship-bar-msg" id="shipBarMsg"></div>
-      <div class="ship-bar-track"><div class="ship-bar-fill" id="shipBarFill"></div></div>
-    </div>
     <div class="cart-total-row"><span>Subtotal (<span id="cartCount">0</span> productos)</span><span id="cartSubtotal">—</span></div>
     <p class="cart-total-note">* La disponibilidad se confirma al consultar. El pedido se enviará por WhatsApp.</p>
     <button class="cart-wa-btn" onclick="sendCartToWhatsApp()">
@@ -1209,6 +1205,10 @@
       Consultar pedido por WhatsApp
     </button>
     <button class="cart-clear-btn" onclick="clearCart()">🗑 Vaciar carrito</button>
+    <div class="ship-bar" id="shipBar" style="display:none">
+      <div class="ship-bar-msg" id="shipBarMsg"></div>
+      <div class="ship-bar-track"><div class="ship-bar-fill" id="shipBarFill"></div></div>
+    </div>
   </div>
 </div>
 
