@@ -909,6 +909,15 @@
   .cart-total-main { font-size: 1.15rem; font-weight: 800; color: var(--navy);
     display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
   .cart-total-note { font-size: .75rem; color: #888; margin-bottom: 14px; }
+  .ship-bar { background: #fff; border: 2px solid rgba(77,200,216,.4); border-radius: 14px;
+    padding: 12px 14px; margin-bottom: 12px; }
+  .ship-bar.done { border-color: #25D366; background: #f0fdf4; }
+  .ship-bar-msg { font-size: .85rem; font-weight: 800; color: var(--navy); margin-bottom: 8px; text-align: center; }
+  .ship-bar.done .ship-bar-msg { color: #128C7E; }
+  .ship-bar-track { height: 10px; border-radius: 6px; background: #e8eef4; overflow: hidden; }
+  .ship-bar-fill { height: 100%; width: 0; border-radius: 6px;
+    background: linear-gradient(90deg, var(--sky), #0ea5b7); transition: width .4s ease; }
+  .ship-bar.done .ship-bar-fill { background: linear-gradient(90deg, #25D366, #128C7E); }
   .cart-wa-btn { display: flex; align-items: center; justify-content: center; gap: 10px;
     background: #25D366; color: #fff; border: none; border-radius: 30px; padding: 14px 24px;
     font-weight: 800; font-size: 1rem; cursor: pointer; width: 100%; text-decoration: none;
@@ -1189,6 +1198,10 @@
     <div id="cartItemsList"></div>
   </div>
   <div class="cart-footer" id="cartFooter" style="display:none">
+    <div class="ship-bar" id="shipBar" style="display:none">
+      <div class="ship-bar-msg" id="shipBarMsg"></div>
+      <div class="ship-bar-track"><div class="ship-bar-fill" id="shipBarFill"></div></div>
+    </div>
     <div class="cart-total-row"><span>Subtotal (<span id="cartCount">0</span> productos)</span><span id="cartSubtotal">—</span></div>
     <p class="cart-total-note">* La disponibilidad se confirma al consultar. El pedido se enviará por WhatsApp.</p>
     <button class="cart-wa-btn" onclick="sendCartToWhatsApp()">
@@ -3477,6 +3490,9 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
     }
   }
 
+  // Meta de envío gratis (cambiar este monto según tu política)
+  const FREE_SHIPPING_MIN = 30000;
+
   function parsePrice(priceStr) {
     if (!priceStr) return 0;
     var num = parseFloat(priceStr.replace('$', '').replace(/\./g, ''));
@@ -3548,6 +3564,25 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
     } else {
       subtotalEl.textContent = 'A confirmar';
       if (noteEl) noteEl.textContent = '* Los precios se confirman por WhatsApp al consultar disponibilidad.';
+    }
+
+    var bar = document.getElementById('shipBar');
+    var barMsg = document.getElementById('shipBarMsg');
+    var barFill = document.getElementById('shipBarFill');
+    if (bar && total > 0) {
+      bar.style.display = '';
+      const pct = Math.min(100, Math.round(total / FREE_SHIPPING_MIN * 100));
+      barFill.style.width = pct + '%';
+      if (total >= FREE_SHIPPING_MIN) {
+        bar.classList.add('done');
+        barMsg.textContent = '🎉 ¡Tenés envío gratis en este pedido!';
+      } else {
+        bar.classList.remove('done');
+        const falta = FREE_SHIPPING_MIN - total;
+        barMsg.textContent = '🛵 Te faltan $' + falta.toLocaleString('es-AR') + ' para el envío gratis';
+      }
+    } else if (bar) {
+      bar.style.display = 'none';
     }
   }
 
