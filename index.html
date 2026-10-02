@@ -910,7 +910,7 @@
     display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
   .cart-total-note { font-size: .75rem; color: #888; margin-bottom: 14px; }
   .ship-bar { background: #fff; border: 2px solid rgba(77,200,216,.4); border-radius: 14px;
-    padding: 12px 14px; margin-top: 12px; }
+    padding: 12px 14px; margin: 12px 20px 0; }
   .ship-bar.done { border-color: #25D366; background: #f0fdf4; }
   .ship-bar-msg { font-size: .85rem; font-weight: 800; color: var(--navy); margin-bottom: 8px; text-align: center; }
   .ship-bar.done .ship-bar-msg { color: #128C7E; }
@@ -1190,6 +1190,10 @@
     </h3>
     <button class="cart-close" onclick="closeCart()" title="Cerrar">&#10005;</button>
   </div>
+  <div class="ship-bar" id="shipBar" style="display:none">
+    <div class="ship-bar-msg" id="shipBarMsg"></div>
+    <div class="ship-bar-track"><div class="ship-bar-fill" id="shipBarFill"></div></div>
+  </div>
   <div class="cart-body" id="cartBody">
     <div class="cart-empty" id="cartEmpty">
       <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
@@ -1205,10 +1209,6 @@
       Consultar pedido por WhatsApp
     </button>
     <button class="cart-clear-btn" onclick="clearCart()">🗑 Vaciar carrito</button>
-    <div class="ship-bar" id="shipBar" style="display:none">
-      <div class="ship-bar-msg" id="shipBarMsg"></div>
-      <div class="ship-bar-track"><div class="ship-bar-fill" id="shipBarFill"></div></div>
-    </div>
   </div>
 </div>
 
@@ -3511,6 +3511,8 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       list.innerHTML = '';
       empty.style.display = '';
       footer.style.display = 'none';
+      var bar0 = document.getElementById('shipBar');
+      if (bar0) bar0.style.display = 'none';
       return;
     }
 
