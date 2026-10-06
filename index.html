@@ -381,11 +381,11 @@
     font-family: 'Nunito', sans-serif; font-weight: 800; font-size: .9rem; transition: background .2s, color .2s; }
   .no-results-btn:hover { background: var(--sky); color: #fff; }
   .search-count { position: fixed; right: 12px; top: 158px; z-index: 950;
-    background: #fff; border: 1px solid #dadce0; border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,.18); padding: 6px 6px 6px 12px;
-    font-size: .82rem; font-weight: 400; color: #5f6368; white-space: nowrap; display: none; align-items: center; gap: 4px; }
-  .search-count #findQuery { color: #202124; max-width: 130px; overflow: hidden;
-    text-overflow: ellipsis; }
+    background: #fff; border: 1px solid #dadce0; border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,.2); padding: 10px 8px 10px 14px; min-width: 250px;
+    font-size: .9rem; font-weight: 400; color: #5f6368; white-space: nowrap; display: none; align-items: center; gap: 6px; }
+  .search-count #findInput { border: none; outline: none; background: transparent;
+    font: inherit; color: #202124; width: 120px; padding: 0; }
   .search-count #searchCountText { font-weight: 700; color: var(--navy); }
   .product-card-name mark { background: rgba(77,200,216,.45); border-radius: 3px; padding: 0 1px; }
   .match-nav { display: inline-flex; align-items: center; gap: 2px; margin-left: 8px; }
@@ -1470,7 +1470,7 @@
     <input type="text" id="productSearchInput" placeholder="Buscá tu producto..." onkeydown="if(event.key==='Enter')productSearch()">
     <button class="search-clear" onclick="clearSearch()">✕</button>
   </div>
-  <div class="search-count" id="searchCount" style="display:none"><span id="findQuery"></span><span id="matchPos">0 de 0</span><span class="match-nav" id="matchNav"><button type="button" id="matchPrev" title="Anterior"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 8l-6 6 1.4 1.4L12 10.8l4.6 4.6L18 14z"/></svg></button><button type="button" id="matchNext" title="Siguiente"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 16l6-6-1.4-1.4L12 13.2 7.4 8.6 6 10z"/></svg></button><button type="button" id="matchClose" title="Cerrar">✕</button></span></div>
+  <div class="search-count" id="searchCount" style="display:none"><input id="findInput" autocomplete="off" placeholder="Buscar..."><span id="matchPos">0 de 0</span><span class="match-nav" id="matchNav"><button type="button" id="matchPrev" title="Anterior"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 8l-6 6 1.4 1.4L12 10.8l4.6 4.6L18 14z"/></svg></button><button type="button" id="matchNext" title="Siguiente"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 16l6-6-1.4-1.4L12 13.2 7.4 8.6 6 10z"/></svg></button><button type="button" id="matchClose" title="Cerrar">✕</button></span></div>
   <div class="products-container">
     <div class="no-results" id="noResults"><div class="no-results-icon"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#1A3A6B" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></div><div class="no-results-title">No encontramos nada para &ldquo;<span id="noResultsQuery"></span>&rdquo;</div><span class="no-results-hint">Escr&iacute;belo de otra forma y vuelve a intentar.</span><button type="button" class="no-results-btn" onclick="clearSearch()">Ver todos los productos</button></div>
 
@@ -3729,10 +3729,10 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
 
     var n = document.querySelectorAll('.product-card:not(.search-hidden)').length;
     var countEl = document.getElementById('searchCount');
-    var queryEl = document.getElementById('findQuery');
+    var findEl = document.getElementById('findInput');
     if (countEl) {
       if (raw.length > 0) {
-        if (queryEl) queryEl.textContent = raw;
+        if (findEl && document.activeElement !== findEl) findEl.value = raw;
         countEl.style.display = 'flex';
         updateMatchNav(true);
       } else {
@@ -3784,6 +3784,11 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
     window.scrollTo({ top: Math.max(y, 0), behavior: 'smooth' });
   }
   var _liveT = null;
+  var _lastEnterQuery = '';
+  function syncFindInput(v) {
+    const fi = document.getElementById('findInput');
+    if (fi && document.activeElement !== fi) fi.value = v;
+  }
   function keepSearchVisible() {
     const sec = document.querySelector('.products-section');
     if (!sec) return;
@@ -3798,6 +3803,7 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
     const other = src === 'nav' ? document.getElementById('productSearchInput') : document.getElementById('navSearchInput');
     if (!inp) return;
     if (other) other.value = inp.value;
+    syncFindInput(inp.value);
     const c = document.getElementById('navSearch');
     const pc = document.querySelector('.product-search');
     const has = inp.value.length > 0;
@@ -3830,6 +3836,30 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       mc.dataset.bound = '1';
       mc.addEventListener('click', function() { clearSearch(); clearNavSearch(); });
     }
+    const fi = document.getElementById('findInput');
+    if (fi && !fi.dataset.bound) {
+      fi.dataset.bound = '1';
+      fi.addEventListener('input', function() {
+        clearTimeout(_liveT);
+        _liveT = setTimeout(function() {
+          const v = fi.value;
+          const n = document.getElementById('navSearchInput');
+          const p = document.getElementById('productSearchInput');
+          if (n) n.value = v;
+          if (p) p.value = v;
+          _lastEnterQuery = '';
+          liveSearch(document.activeElement === n ? 'nav' : 'prod');
+        }, 150);
+      });
+      fi.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const qn = normT(fi.value.trim());
+          if (qn.length > 0 && qn === _lastEnterQuery) { goMatch(1); fi.blur(); }
+          else { _lastEnterQuery = qn; updateMatchNav(true); }
+        }
+      });
+    }
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bindLiveSearch);
   else bindLiveSearch();
@@ -3847,7 +3877,11 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
   // Nav search
   function navSearch() {
     const inp = document.getElementById('navSearchInput');
+    const qn = normT(inp.value.trim());
+    if (qn.length > 0 && qn === _lastEnterQuery) { goMatch(1); inp.blur(); return; }
+    _lastEnterQuery = qn;
     document.getElementById('productSearchInput').value = inp.value;
+    syncFindInput(inp.value);
     filterProducts(inp.value);
     const c = document.getElementById('navSearch');
     const pc = document.querySelector('.product-search');
@@ -3870,7 +3904,11 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
   // Product search
   function productSearch() {
     const inp = document.getElementById('productSearchInput');
+    const qn = normT(inp.value.trim());
+    if (qn.length > 0 && qn === _lastEnterQuery) { goMatch(1); inp.blur(); return; }
+    _lastEnterQuery = qn;
     document.getElementById('navSearchInput').value = inp.value;
+    syncFindInput(inp.value);
     filterProducts(inp.value);
     const c = document.getElementById('navSearch');
     if(inp.value.length > 0) { c.classList.add('has-text'); } else { c.classList.remove('has-text'); }
