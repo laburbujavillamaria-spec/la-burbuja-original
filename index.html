@@ -382,6 +382,12 @@
   .no-results-btn:hover { background: var(--sky); color: #fff; }
   .search-count { text-align: center; font-size: .85rem; font-weight: 700; color: var(--navy); margin: 10px auto 0; display: none; }
   .product-card-name mark { background: rgba(77,200,216,.45); border-radius: 3px; padding: 0 1px; }
+  .match-nav { display: inline-flex; align-items: center; gap: 6px; margin-left: 10px; }
+  .match-nav button { width: 26px; height: 26px; border-radius: 50%; border: 2px solid rgba(77,200,216,.5);
+    background: #fff; color: var(--navy); font-weight: 900; cursor: pointer; line-height: 1; padding: 0; }
+  .match-nav button:hover { background: var(--sky); color: #fff; border-color: var(--sky); }
+  #matchPos { font-size: .8rem; font-weight: 800; color: var(--navy); min-width: 52px; text-align: center; }
+  .product-card.search-current { outline: 3px solid var(--sky); outline-offset: 2px; }
   .section-header h2 { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--navy); }
   .section-header p { color: var(--gray); margin-top: 6px; }
   .products-container { display: flex; flex-direction: column; gap: 48px; overflow: hidden; }
@@ -1456,7 +1462,7 @@
     <input type="text" id="productSearchInput" placeholder="Buscá tu producto..." onkeydown="if(event.key==='Enter')productSearch()">
     <button class="search-clear" onclick="clearSearch()">✕</button>
   </div>
-  <div class="search-count" id="searchCount"></div>
+  <div class="search-count" id="searchCount" style="display:none"><span id="searchCountText"></span><span class="match-nav" id="matchNav" style="display:none"><button type="button" id="matchPrev" title="Anterior">↑</button><span id="matchPos"></span><button type="button" id="matchNext" title="Siguiente">↓</button></span></div>
   <div class="products-container">
     <div class="no-results" id="noResults"><div class="no-results-icon"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#1A3A6B" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></div><div class="no-results-title">No encontramos nada para &ldquo;<span id="noResultsQuery"></span>&rdquo;</div><span class="no-results-hint">Escr&iacute;belo de otra forma y vuelve a intentar.</span><button type="button" class="no-results-btn" onclick="clearSearch()">Ver todos los productos</button></div>
 
@@ -3715,12 +3721,15 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
 
     var n = document.querySelectorAll('.product-card:not(.search-hidden)').length;
     var countEl = document.getElementById('searchCount');
+    var countTx = document.getElementById('searchCountText');
     if (countEl) {
       if (raw.length > 0) {
-        countEl.textContent = n === 1 ? '1 producto encontrado' : n + ' productos encontrados';
+        if (countTx) countTx.textContent = n === 1 ? '1 producto encontrado' : n + ' productos encontrados';
         countEl.style.display = 'block';
+        updateMatchNav(true);
       } else {
         countEl.style.display = 'none';
+        updateMatchNav(false);
       }
     }
     var noResBox = document.getElementById('noResults');
@@ -3731,6 +3740,36 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
     } else {
       noResBox.style.display = 'none';
     }
+  }
+  var _matchIdx = 0;
+  function visibleMatches() {
+    return Array.from(document.querySelectorAll('.product-card:not(.search-hidden)'));
+  }
+  function updateMatchNav(reset) {
+    const nav = document.getElementById('matchNav');
+    const pos = document.getElementById('matchPos');
+    document.querySelectorAll('.product-card.search-current').forEach(c => c.classList.remove('search-current'));
+    if (!nav) return;
+    const q = (document.getElementById('productSearchInput').value.trim() || document.getElementById('navSearchInput').value.trim());
+    const list = visibleMatches();
+    if (reset) _matchIdx = 0;
+    if (q.length === 0 || list.length === 0) { nav.style.display = 'none'; return; }
+    nav.style.display = '';
+    if (_matchIdx >= list.length) _matchIdx = 0;
+    list[_matchIdx].classList.add('search-current');
+    if (pos) pos.textContent = (_matchIdx + 1) + ' de ' + list.length;
+  }
+  function goMatch(d) {
+    const list = visibleMatches();
+    if (list.length === 0) return;
+    _matchIdx = (_matchIdx + d + list.length) % list.length;
+    const card = list[_matchIdx];
+    document.querySelectorAll('.product-card.search-current').forEach(c => c.classList.remove('search-current'));
+    card.classList.add('search-current');
+    const pos = document.getElementById('matchPos');
+    if (pos) pos.textContent = (_matchIdx + 1) + ' de ' + list.length;
+    const y = card.getBoundingClientRect().top + window.pageYOffset - 160;
+    window.scrollTo({ top: Math.max(y, 0), behavior: 'smooth' });
   }
   var _liveT = null;
   function keepSearchVisible() {
@@ -3766,6 +3805,13 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
         const src = pair[0];
         _liveT = setTimeout(function() { liveSearch(src); }, 150);
       });
+    });
+    [['matchPrev', -1], ['matchNext', 1]].forEach(pair => {
+      const b = document.getElementById(pair[0]);
+      if (b && !b.dataset.bound) {
+        b.dataset.bound = '1';
+        b.addEventListener('click', function() { goMatch(pair[1]); });
+      }
     });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bindLiveSearch);
