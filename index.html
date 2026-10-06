@@ -384,6 +384,8 @@
     background: #fff; border: 1px solid #dadce0; border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0,0,0,.18); padding: 6px 6px 6px 12px;
     font-size: .82rem; font-weight: 400; color: #5f6368; white-space: nowrap; display: none; align-items: center; gap: 4px; }
+  .search-count #findQuery { color: #202124; max-width: 130px; overflow: hidden;
+    text-overflow: ellipsis; }
   .search-count #searchCountText { font-weight: 700; color: var(--navy); }
   .product-card-name mark { background: rgba(77,200,216,.45); border-radius: 3px; padding: 0 1px; }
   .match-nav { display: inline-flex; align-items: center; gap: 2px; margin-left: 8px; }
@@ -1468,7 +1470,7 @@
     <input type="text" id="productSearchInput" placeholder="Buscá tu producto..." onkeydown="if(event.key==='Enter')productSearch()">
     <button class="search-clear" onclick="clearSearch()">✕</button>
   </div>
-  <div class="search-count" id="searchCount" style="display:none"><span id="searchCountText"></span><span class="match-nav" id="matchNav" style="display:none"><button type="button" id="matchPrev" title="Anterior">↑</button><span id="matchPos"></span><button type="button" id="matchNext" title="Siguiente">↓</button><button type="button" id="matchClose" title="Cerrar">✕</button></span></div>
+  <div class="search-count" id="searchCount" style="display:none"><span id="findQuery"></span><span id="matchPos">0 de 0</span><span class="match-nav" id="matchNav"><button type="button" id="matchPrev" title="Anterior"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 8l-6 6 1.4 1.4L12 10.8l4.6 4.6L18 14z"/></svg></button><button type="button" id="matchNext" title="Siguiente"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 16l6-6-1.4-1.4L12 13.2 7.4 8.6 6 10z"/></svg></button><button type="button" id="matchClose" title="Cerrar">✕</button></span></div>
   <div class="products-container">
     <div class="no-results" id="noResults"><div class="no-results-icon"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#1A3A6B" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></div><div class="no-results-title">No encontramos nada para &ldquo;<span id="noResultsQuery"></span>&rdquo;</div><span class="no-results-hint">Escr&iacute;belo de otra forma y vuelve a intentar.</span><button type="button" class="no-results-btn" onclick="clearSearch()">Ver todos los productos</button></div>
 
@@ -3727,10 +3729,10 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
 
     var n = document.querySelectorAll('.product-card:not(.search-hidden)').length;
     var countEl = document.getElementById('searchCount');
-    var countTx = document.getElementById('searchCountText');
+    var queryEl = document.getElementById('findQuery');
     if (countEl) {
       if (raw.length > 0) {
-        if (countTx) countTx.textContent = n === 1 ? '1 de 1' : n + ' resultados';
+        if (queryEl) queryEl.textContent = raw;
         countEl.style.display = 'flex';
         updateMatchNav(true);
       } else {
@@ -3759,7 +3761,11 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
     const q = (document.getElementById('productSearchInput').value.trim() || document.getElementById('navSearchInput').value.trim());
     const list = visibleMatches();
     if (reset) _matchIdx = 0;
-    if (q.length === 0 || list.length === 0) { nav.style.display = 'none'; return; }
+    if (q.length === 0 || list.length === 0) {
+      nav.style.display = '';
+      if (pos) pos.textContent = '0 de 0';
+      return;
+    }
     nav.style.display = '';
     if (_matchIdx >= list.length) _matchIdx = 0;
     list[_matchIdx].classList.add('search-current');
