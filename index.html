@@ -4060,9 +4060,23 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
         target.style.transition = 'box-shadow .4s, border-color .4s';
         target.style.boxShadow = '0 0 0 4px #1A3A6B, 0 8px 32px rgba(26,58,107,.4)';
         target.style.borderColor = '#1A3A6B';
-        setTimeout(focusTarget, 1200);
+        var t0 = Date.now();
+        var lastH = document.documentElement.scrollHeight;
+        var stableSince = t0;
+        var stableTimer = setInterval(function() {
+          if (userScrolled || Date.now() - t0 > 12000) { clearInterval(stableTimer); return; }
+          var now = Date.now();
+          var h = document.documentElement.scrollHeight;
+          if (h !== lastH) { lastH = h; stableSince = now; }
+          var r = target.getBoundingClientRect();
+          var centered = Math.abs((r.top + r.bottom) / 2 - window.innerHeight / 2) < 4;
+          if (!centered) {
+            target.scrollIntoView({ block: 'center' });
+            stableSince = now;
+          }
+          if (now - stableSince > 2500) clearInterval(stableTimer);
+        }, 350);
       }, 300);
-      window.addEventListener('load', function() { setTimeout(focusTarget, 400); });
     }
   }
 })();
