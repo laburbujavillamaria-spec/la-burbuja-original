@@ -4027,6 +4027,7 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
   if (hash && hash.indexOf('#p-') === 0) {
     var target = document.getElementById(hash.substring(1));
     if (target) {
+      document.querySelectorAll('.product-category').forEach(function(c) { c.style.contentVisibility = 'visible'; });
       var cat = target.closest('.product-category');
       if (cat && !cat.classList.contains('cat-open')) {
         cat.classList.add('cat-open');
