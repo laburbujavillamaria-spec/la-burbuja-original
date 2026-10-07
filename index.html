@@ -4038,16 +4038,31 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
           sidebarItem.classList.add('active');
         }
       }
-      setTimeout(function() {
+      var userScrolled = false;
+      function markUserScroll() { userScrolled = true; }
+      window.addEventListener('wheel', markUserScroll, { once: true, passive: true });
+      window.addEventListener('touchmove', markUserScroll, { once: true, passive: true });
+      window.addEventListener('keydown', function(e) {
+        if (['ArrowUp','ArrowDown','PageUp','PageDown',' ','Home','End'].indexOf(e.key) >= 0) markUserScroll();
+      });
+      function focusTarget() {
+        if (userScrolled) return;
         target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      function clearHi() {
+        target.style.boxShadow = '';
+        target.style.borderColor = '';
+      }
+      window.addEventListener('wheel', clearHi, { once: true, passive: true });
+      window.addEventListener('touchmove', clearHi, { once: true, passive: true });
+      setTimeout(function() {
+        focusTarget();
         target.style.transition = 'box-shadow .4s, border-color .4s';
         target.style.boxShadow = '0 0 0 4px #1A3A6B, 0 8px 32px rgba(26,58,107,.4)';
         target.style.borderColor = '#1A3A6B';
-        setTimeout(function() {
-          target.style.boxShadow = '';
-          target.style.borderColor = '';
-        }, 3000);
+        setTimeout(focusTarget, 1200);
       }, 300);
+      window.addEventListener('load', function() { setTimeout(focusTarget, 400); });
     }
   }
 })();
