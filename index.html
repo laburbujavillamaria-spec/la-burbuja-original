@@ -3791,15 +3791,6 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
     const fi = document.getElementById('findInput');
     if (fi && document.activeElement !== fi) fi.value = v;
   }
-  function keepSearchVisible() {
-    const sec = document.querySelector('.products-section');
-    if (!sec) return;
-    const top = sec.getBoundingClientRect().top + window.pageYOffset - 160;
-    const maxY = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
-    if (window.pageYOffset > maxY + 4 || window.pageYOffset < top - window.innerHeight) {
-      window.scrollTo(0, Math.min(Math.max(top, 0), maxY));
-    }
-  }
   function liveSearch(src) {
     const inp = src === 'nav' ? document.getElementById('navSearchInput') : document.getElementById('productSearchInput');
     const other = src === 'nav' ? document.getElementById('productSearchInput') : document.getElementById('navSearchInput');
@@ -3813,7 +3804,6 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
     if (pc) pc.classList.toggle('has-text', has);
     document.body.classList.toggle('ig-searching', inp.value.trim().length > 0);
     filterProducts(inp.value);
-    keepSearchVisible();
   }
   function bindLiveSearch() {
     [['nav', 'navSearchInput'], ['prod', 'productSearchInput']].forEach(pair => {
@@ -3889,7 +3879,7 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
     const pc = document.querySelector('.product-search');
     if(inp.value.length > 0) { c.classList.add('has-text'); pc.classList.add('has-text'); } else { c.classList.remove('has-text'); pc.classList.remove('has-text'); }
     if(inp.value.trim().length > 0) {
-      document.querySelector('.products-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      goMatch(0);
     }
   }
   function clearNavSearch() {
@@ -3914,7 +3904,7 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
     const c = document.getElementById('navSearch');
     if(inp.value.length > 0) { c.classList.add('has-text'); } else { c.classList.remove('has-text'); }
     if(inp.value.trim().length > 0) {
-      document.querySelector('.products-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      goMatch(0);
     }
   }
 
