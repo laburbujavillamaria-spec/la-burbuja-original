@@ -3672,6 +3672,8 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
   }
   function filterProducts(val) {
     const raw = val.trim();
+    const qWasEmpty = (_prevQ.length === 0);
+    _prevQ = raw;
     const words = normT(raw).split(/\s+/).filter(Boolean);
     const rawWords = raw.split(/\s+/).filter(Boolean);
     const container = document.querySelector('.product-search');
@@ -3750,8 +3752,16 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
     } else {
       noResBox.style.display = 'none';
     }
+    if (qWasEmpty && raw.length > 0) {
+      const sec = document.querySelector('.products-section');
+      if (sec) {
+        const top = sec.getBoundingClientRect().top + window.pageYOffset - 150;
+        if (Math.abs(window.pageYOffset - top) > 4) window.scrollTo({ top: Math.max(top, 0), behavior: 'smooth' });
+      }
+    }
   }
   var _matchIdx = 0;
+  var _prevQ = '';
   function visibleMatches() {
     return Array.from(document.querySelectorAll('.product-card:not(.search-hidden)'));
   }
