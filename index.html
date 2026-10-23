@@ -389,11 +389,12 @@
     font: inherit; color: #202124; width: 120px; }
   .search-count #findInput:focus { background: rgba(77,200,216,.25); }
   .search-count #searchCountText { font-weight: 700; color: var(--navy); }
-  .sin-stock-ribbon { position: absolute; top: 12px; left: 50%; transform: translateX(-50%) rotate(-28deg);
-    background: linear-gradient(135deg, #ef4444, #b91c1c); color: #fff;
-    font-weight: 900; font-size: .95rem; letter-spacing: .08em;
-    padding: 6px 34px; border-radius: 6px;
-    box-shadow: 0 4px 14px rgba(185,28,28,.55);
+  .sin-stock-ribbon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-28deg);
+    background: rgba(220, 38, 38, .62); color: #fff; backdrop-filter: blur(1px);
+    font-weight: 900; font-size: 1.05rem; letter-spacing: .12em;
+    padding: 10px 40px; border-radius: 8px;
+    border: 2px solid rgba(255,255,255,.45);
+    box-shadow: 0 4px 18px rgba(185,28,28,.35);
     z-index: 5; pointer-events: none; white-space: nowrap; }
   .product-card[data-soldout="1"] .btn-add-cart,
   .product-card[data-soldout="1"] .btn-add-unit,
