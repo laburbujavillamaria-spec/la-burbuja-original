@@ -3856,11 +3856,8 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       const el = document.getElementById(pair[1]);
       if (!el || el.dataset.liveBound) return;
       el.dataset.liveBound = '1';
-      el.addEventListener('input', function() {
-        clearTimeout(_liveT);
-        const src = pair[0];
-        _liveT = setTimeout(function() { liveSearch(src); }, 150);
-      });
+      // Se busca solo al presionar Enter (onkeydown en los inputs) o al hacer clic en la lupa;
+      // no se filtra mientras se escribe para evitar que la página se mueva.
     });
     [['matchPrev', -1], ['matchNext', 1]].forEach(pair => {
       const b = document.getElementById(pair[0]);
