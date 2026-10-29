@@ -3780,10 +3780,7 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       var rawQ = document.getElementById('navSearchInput').value.trim() || document.getElementById('productSearchInput').value.trim() || val.trim();
       document.getElementById('noResultsQuery').textContent = rawQ;
       noResBox.style.display = 'block';
-      const sbox = document.querySelector('.product-search');
-      const y0 = (sbox ? sbox.getBoundingClientRect().top : noResBox.getBoundingClientRect().top) + window.pageYOffset - 170;
-      const maxY0 = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
-      if (Math.abs(window.pageYOffset - y0) > 4) window.scrollTo({ top: Math.min(Math.max(y0, 0), maxY0), behavior: 'smooth' });
+      // No se mueve la página al mostrar "no resultados": el usuario se queda donde está
     } else {
       noResBox.style.display = 'none';
     }
@@ -3924,7 +3921,7 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
     const pc = document.querySelector('.product-search');
     if(inp.value.length > 0) { c.classList.add('has-text'); pc.classList.add('has-text'); } else { c.classList.remove('has-text'); pc.classList.remove('has-text'); }
     if(inp.value.trim().length > 0) {
-      goMatch(0);
+      updateMatchNav(true);
     }
   }
   function clearNavSearch() {
@@ -3951,7 +3948,7 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
     const c = document.getElementById('navSearch');
     if(inp.value.length > 0) { c.classList.add('has-text'); } else { c.classList.remove('has-text'); }
     if(inp.value.trim().length > 0) {
-      goMatch(0);
+      updateMatchNav(true);
     }
   }
 
