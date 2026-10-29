@@ -3780,7 +3780,10 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       var rawQ = document.getElementById('navSearchInput').value.trim() || document.getElementById('productSearchInput').value.trim() || val.trim();
       document.getElementById('noResultsQuery').textContent = rawQ;
       noResBox.style.display = 'block';
-      // No se mueve la página al mostrar "no resultados": el usuario se queda donde está
+      const sbox = document.querySelector('.product-search');
+      const y0 = (sbox ? sbox.getBoundingClientRect().top : noResBox.getBoundingClientRect().top) + window.pageYOffset - 170;
+      const maxY0 = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+      if (Math.abs(window.pageYOffset - y0) > 4) window.scrollTo({ top: Math.min(Math.max(y0, 0), maxY0), behavior: 'smooth' });
     } else {
       noResBox.style.display = 'none';
     }
