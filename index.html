@@ -3771,7 +3771,7 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
         countEl.style.display = 'flex';
         updateMatchNav(true);
       } else {
-        countEl.style.display = 'none';
+        // Al borrar la palabra no se oculta: el usuario decide cerrarlo con la X
         updateMatchNav(false);
       }
     }
@@ -3906,6 +3906,8 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
     document.getElementById('navSearch').classList.remove('has-text');
     document.body.classList.remove('ig-searching');
     filterProducts('');
+    var ce = document.getElementById('searchCount');
+    if (ce) ce.style.display = 'none';
     document.getElementById('productSearchInput').blur();
   }
 
@@ -3932,6 +3934,8 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
     document.querySelector('.product-search').classList.remove('has-text');
     document.body.classList.remove('ig-searching');
     filterProducts('');
+    var ce = document.getElementById('searchCount');
+    if (ce) ce.style.display = 'none';
     document.getElementById('navSearchInput').blur();
   }
 
