@@ -3684,6 +3684,10 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
     return (s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   }
   function escRe(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+  // Busca la palabra al inicio de una palabra (no como subcadena en medio de otra palabra)
+  function wordStartsWith(hay, w) {
+    return new RegExp('(^|\\s)' + escRe(w), 'i').test(hay);
+  }
   function flexRe(word) {
     const map = { a:'áàäâ', e:'éèëê', i:'íìïî', o:'óòöô', u:'úùüû', n:'ñ', c:'ç' };
     return word.toLowerCase().split('').map(ch => {
@@ -3730,7 +3734,7 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       let hay = nameT + ' ' + catT + ' ' + priceT;
       // Se filtra solo por nombre, categoría y precio (lo que el usuario ve);
       // las desc ocultas de sellerDesc no se usan para evitar falsos positivos.
-      const ok = words.length === 0 || words.every(w => hay.includes(w));
+      const ok = words.length === 0 || words.every(w => wordStartsWith(hay, w));
       const catOk = words.length > 0 && words.every(w => catT.includes(w));
       if (ok || catOk) {
         card.classList.remove('search-hidden');
@@ -3875,18 +3879,7 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
     const fi = document.getElementById('findInput');
     if (fi && !fi.dataset.bound) {
       fi.dataset.bound = '1';
-      fi.addEventListener('input', function() {
-        clearTimeout(_liveT);
-        _liveT = setTimeout(function() {
-          const v = fi.value;
-          const n = document.getElementById('navSearchInput');
-          const p = document.getElementById('productSearchInput');
-          if (n) n.value = v;
-          if (p) p.value = v;
-          _lastEnterQuery = '';
-          liveSearch(document.activeElement === n ? 'nav' : 'prod');
-        }, 150);
-      });
+      // Solo se filtra al presionar Enter (keydown abajo), no mientras se escribe
       fi.addEventListener('keydown', function(e) {
         if (e.key === 'Enter') {
           e.preventDefault();
