@@ -4043,7 +4043,7 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
     var price = '';
     var priceEl = card.querySelector('.product-card-price') || card.querySelector('.unit-price');
     if (priceEl) price = priceEl.textContent.trim();
-    var slug = productName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    var slug = (typeof normT === 'function' ? normT(productName) : productName.toLowerCase()).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
     card.id = 'p-' + slug;
     var directUrl = siteUrl + '/#p-' + slug;
     var sharePageUrl = siteUrl + '/p/' + slug + '.html';
@@ -4070,6 +4070,9 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
     row.appendChild(btn);
   });
   var hash = window.location.hash;
+  // Alias de anclas viejas renombradas (ej. Raid mata moscas y mosquitos)
+  var hashAliases = { 'p-raid-mata-moscas-y-mosquitos': 'p-raid-doble-accion' };
+  if (hashAliases[hash.substring(1)]) hash = '#' + hashAliases[hash.substring(1)];
   if (hash && hash.indexOf('#p-') === 0) {
     var target = document.getElementById(hash.substring(1));
     if (target) {
@@ -4273,7 +4276,7 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       desc: 'Limpiador líquido para vidrios, cristales, espejos y múltiples superficies. Disuelve grasitud y suciedad y deja la superficie limpia y sin vetas.',
       use: 'Pulverizar sobre la superficie, frotar con un paño limpio y seco que no deje pelusa y repasar con otro paño seco. No requiere enjuague.'
     },
-    'cido-muriatico-x5lt': {
+    'acido-muriatico-x5lt': {
       tag: 'Limpieza fuerte · 5 Litros',
       desc: 'Ácido muriático para la limpieza de superficies difíciles como concreto, piedra, azulejos y baños. Producto altamente corrosivo que debe usarse con extremo cuidado.',
       use: 'Usar siempre diluido en agua, con guantes y lentes de protección y en lugares ventilados. Aplicar con cepillo sobre la superficie, esperar unos minutos y enjuagar con abundante agua. No aplicar sobre metales. Mantener fuera del alcance de los niños.'
@@ -4303,7 +4306,7 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       desc: 'Aromatizante Saphirus Caritas para autos y pequeños espacios, en pack de 2 unidades de 5,6 g y varias fragancias.',
       use: 'Colocar en el vehículo; si queda expuesto al sol con altas temperaturas, reubicar fuera del sol directo.'
     },
-    'cera-full-car-brillo-express-rosa-x1lt': {
+    'silicona-para-exterior-full-car-brillo-express-rosa-x1lt': {
       tag: 'Full Car · Brillo Express · 1 Litro',
       desc: 'Cera Full Car Brillo Express con P.T.F.E. (Teflon): combina siliconas, ceras catiónicas y polímeros acrílicos que forman una película brillante antiestática, evitan la adherencia de suciedad e insectos y protegen de los rayos UV.',
       use: 'Aplicar sobre la superficie húmeda o seca.'
@@ -4438,7 +4441,7 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       desc: 'Limpiador Rugbee (Diversey) para alfombras y tapizados, con tensioactivos y solventes; forma una espuma densa seca y aspirable que no deja residuos pegajosos.',
       use: 'Aspirar, cubrir la zona, esparcir con esponja o cepillo húmedo, dejar secar y aspirar.'
     },
-    'shampoo-para-hidrolavadora-silisur-x1lt': {
+    'shampo-para-hidrolavadora-x1lt-silisur': {
       tag: 'Silisur · Espuma activa · 1 Litro',
       desc: 'Shampoo Silisur línea Lava Autos de espuma activa para hidrolavadoras: cristalino, neutro y biodegradable, de alta espuma, remueve grasa y tierra con fácil enjuague.',
       use: 'Diluir según el equipo, aplicar con esponja o cepillo y enjuagar con abundante agua sin dejar secar al sol.'
@@ -4493,42 +4496,42 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       desc: 'Aromatizante Saphirus Sensaciones en gel de 8 g para espacios reducidos, con una duración aproximada de 30 días.',
       use: 'Abrir el gel, retirar el film protector y colocar en su soporte armado con el mismo empaque.'
     },
-    'gamuza-sintetica-laffitte-pa-o-chamois-tama-o-normal': {
+    'gamuza-sintetica-laffitte-pano-chamois-tamano-normal': {
       tag: 'Laffitte · Chamois 43x32',
       desc: 'Paño sintético Laffitte Chamois de PVA de 43x32 cm, súper absorbente; no raya ni deja vetas o pelusa. Viene en tubo plástico reutilizable.',
       use: 'Usar húmedo; si está seco, remojar para revitalizar y guardar apenas húmedo en su envase.'
     },
-    'gamuza-sintetica-laffitte-pa-o-chamois-tama-o-xl': {
+    'gamuza-sintetica-laffitte-pano-chamois-tamano-xl': {
       tag: 'Laffitte · Chamois XL 43x64',
       desc: 'Paño sintético Laffitte Chamois XL de PVA de 43x64 cm, de extraordinaria absorción; remueve polvo y manchas con mayor durabilidad.',
       use: 'Usar húmedo, lavar con agua caliente y detergente suave y guardar húmedo en su estuche.'
     },
-    'pa-o-de-microfibra-full-car-rojo-60x40cm': {
+    'pano-de-microfibra-full-car-rojo-60x40cm': {
       tag: 'Full Car · 60x40',
       desc: 'Paño de microfibra Full Car rojo de 60x40 cm, de doble cara: limpia, seca y da brillo al mismo tiempo, eficaz incluso solo con agua.',
       use: 'Usar seco o húmedo, sin detergentes.'
     },
-    'pa-o-de-microfibra-laffitte-vidrios-30x35cm': {
+    'pano-de-microfibra-laffitte-vidrios-30x35cm': {
       tag: 'Laffitte · Vidrios 30x35',
       desc: 'Paño de microfibra Laffitte para vidrios de 30x35 cm, de textura suave con microcanales; atrapa suciedad y polvillo sin marcas ni pelusa.',
       use: 'Limpiar y secar cristales y espejos.'
     },
-    'pa-o-de-microfibra-tipo-wafle-laffitte-40x60-cm': {
+    'pano-de-microfibra-tipo-wafle-laffitte-40x60-cm': {
       tag: 'Laffitte · Waffle 40x60',
       desc: 'Paño de microfibra Laffitte tipo waffle de 40x60 cm, con efecto remolino que direcciona el agua; absorbe hasta 7 veces su peso para un secado ultra rápido, sin marcas ni olores.',
       use: 'Extender sobre la superficie mojada para el secado final.'
     },
-    'pa-o-lupa-walker': {
+    'pano-lupa-walker': {
       tag: 'Walker · Lupa siliconada',
       desc: 'Paño limpiador Walker Lupa con siliconas, de unos 45x52 cm, para quitar el polvo del auto o la moto.',
       use: 'Pasar en seco para lustrar y quitar el polvo.'
     },
-    'pa-o-lupa': {
+    'pano-lupa': {
       tag: 'Lupa · Con siliconas',
       desc: 'Paño limpiador Lupa nacional con siliconas; no mancha ni raya.',
       use: 'No lavar ni agregar sustancias; solo sacudir suave y guardar en su envase.'
     },
-    'silicona-full-car-emulsi-n-de-silicona-x1lt-hidratador-de-pl-sticos': {
+    'silicona-full-car-emulsion-de-silicona-x1lt-hidratador-de-plasticos': {
       tag: 'Full Car · Protectant · 1 Litro',
       desc: 'Emulsión de siliconas Full Car (Protectant) en base acuosa, aromatizada y libre de solventes; para cueros, plásticos y vinilos, filtra UV, da brillo y renueva el color sin dejar grasoso.',
       use: 'Aplicar sobre la superficie limpia y seca, esparcir parejo y repasar con franela para lograr brillo.'
@@ -4588,7 +4591,7 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       desc: 'Limpiador Ayudin antihongos con cloro activo: elimina de raíz hongos y moho y mata el 99,9 por ciento de virus y bacterias; para juntas, mamparas, cortinas, bañera, pileta y lavatorio.',
       use: 'Rociar a 15-20 cm, dejar actuar 5 minutos y enjuagar o repasar con paño húmedo.'
     },
-    'ayudin-ba-o-gatillo-limpieza-activa-x500ml': {
+    'ayudin-bano-gatillo-limpieza-activa-x500ml': {
       tag: 'Ayudin · Baño 500 ml',
       desc: 'Limpiador Ayudin Baño Limpieza Activa de poder antisarro con resultados en 10 segundos: elimina sarro y restos de jabón, shampoo y dentífrico y da brillo a la grifería.',
       use: 'Girar el gatillo a ON, aplicar directo, pasar paño húmedo y volver a OFF.'
@@ -4603,12 +4606,12 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       desc: 'Pack económico de 2 pastillas Pato Purific para mochila (80 g): limpieza y frescura continua con prevención de sarro, rinde 800 descargas.',
       use: 'Colocar en la mochila como la pastilla simple y reemplazar cuando se consuma.'
     },
-    'cif-ba-o-doy-pack-x900ml': {
+    'cif-bano-doy-pack-x900ml': {
       tag: 'Cif · Baño recarga 900 ml',
       desc: 'Limpiador Cif Bioactive Baño de máxima efectividad contra sarro y restos de jabón, con fragancia biodegradable; para bañera, lavatorio, azulejos, inodoro, mampara, bidet y grifería.',
       use: 'Trasvasar a botella con gatillo, aplicar, dejar 1 minuto como máximo y enjuagar con paño húmedo, sin refregar.'
     },
-    'cif-ba-o-gatillo': {
+    'cif-bano-gatillo': {
       tag: 'Cif · Baño gatillo',
       desc: 'Limpiador Cif Baño ultra rápido con agentes biodegradables: elimina la suciedad difícil y el sarro dejando brillo sin vetas.',
       use: 'Girar la punta a ON, aplicar directo, dejar 1 minuto como máximo y enjuagar con paño húmedo, sin refregar.'
@@ -4628,7 +4631,7 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       desc: 'Repuesto económico Pato canasta líquida floral de 50 ml con espuma limpiadora: limpia, perfuma y previene el sarro con la misma intensidad hasta el último día, rinde 300 descargas.',
       use: 'Presionar la botellita dentro de la base hasta perforar la tapa y colgar con el gancho en el borde interno, bajo la salida de agua.'
     },
-    'glade-o-pato-purific-canasta-s-lida': {
+    'glade-o-pato-purific-canasta-solida': {
       tag: 'Glade · Canasta 27,5 g',
       desc: 'Canasta sólida Glade brisa de mar 3 en 1 (fragancia, limpieza y acción continua); contiene canasta más pastilla de 27,5 g.',
       use: 'Desplegar el gancho y colocar en el borde de la taza, en el flujo de agua.'
@@ -4663,7 +4666,7 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       desc: 'Aparato más repuesto Pato canasta líquida lavanda de 50 ml con espuma limpiadora: limpia, perfuma y previene el sarro, rinde 300 descargas.',
       use: 'Presionar la botellita dentro de la base hasta perforar la tapa y colgar en el borde interno, bajo la salida de agua.'
     },
-    'harpic-gatillo-ba-os-rojo-x495ml': {
+    'harpic-gatillo-banos-rojo-x495ml': {
       tag: 'Harpic · Baños gatillo 495 ml',
       desc: 'Limpiador Harpic Baños que elimina rápido sarro, óxido y restos de jabón en azulejos, grifería de inox y PVC, y elimina el 99,9 por ciento de hongos y bacterias.',
       use: 'Rociar a 20-25 cm, dejar 10 minutos, limpiar, enjuagar y secar; volver a OFF.'
@@ -4678,12 +4681,12 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       desc: 'Limpiador Lysoform Active Power doble acción con cloro activo más espuma activa: limpia profundo y desinfecta, con cuello que llega bajo el borde y evita el sarro.',
       use: 'Aplicar bajo el borde alrededor, dejar 5 minutos, cepillar si hace falta y descargar.'
     },
-    'mr-musculo-ba-o-remueve-restos-de-jabon-botella-gatillo': {
+    'mr-musculo-bano-remueve-restos-de-jabon-botella-gatillo': {
       tag: 'Mr Músculo · Baño gatillo 500 ml',
       desc: 'Limpiador Mr Músculo Baño que remueve el 100 por ciento de los restos de jabón, recupera el brillo y elimina el 99,9 por ciento de gérmenes, con boquilla dual spray y espuma y sin fuerte olor a químicos.',
       use: 'Cubrir la superficie, dejar unos 5 minutos y secar o enjuagar; en cromo o acero 3 minutos como máximo.'
     },
-    'mr-musculo-ba-o-remueve-restos-de-jabon-botella-repuesto': {
+    'mr-musculo-bano-remueve-restos-de-jabon-botella-repuesto': {
       tag: 'Mr Músculo · Repuesto 450 ml',
       desc: 'Repuesto económico Mr Músculo Baño de la misma fórmula anti restos de jabón, para recargar la botella con gatillo.',
       use: 'Trasvasar a la botella con gatillo y usar igual; en cromo o acero 3 minutos como máximo.'
@@ -4703,7 +4706,7 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       desc: 'Gel limpiador Pato Purific tropical que penetra y disuelve el sarro, remueve manchas y elimina malos olores.',
       use: 'Aplicar bajo el borde alrededor, dejar 5 minutos, cepillar y descargar; solo inodoro.'
     },
-    'procenex-ba-o-doy-pack-x420ml': {
+    'procenex-bano-doy-pack-x420ml': {
       tag: 'Procenex · Baño doy 420 ml',
       desc: 'Limpiador y desinfectante Procenex Baño de espuma activa: remueve sarro, hongos y restos de jabón y elimina el 99,9 por ciento de virus, hongos y bacterias; para inodoro, bañera, lavatorio, azulejo y espejo.',
       use: 'Aplicar sobre la superficie y pasar paño; para desinfección completa dejar 10 minutos.'
@@ -4793,7 +4796,7 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       desc: 'Repuesto líquido eléctrico Fuyi de 32,9 ml sin olor: 45 noches de protección contra mosquitos y zancudos.',
       use: 'Enroscar en el aparato en vertical sin tocar la mecha; mantener fuera del alcance de niños y mascotas.'
     },
-    'geltek-bloque-p-ratones': {
+    'geltek-bloque-para-ratones': {
       tag: 'Geltek · Bloques parafinados',
       desc: 'Cebo en bloques parafínicos Geltek, raticida monodósico anticoagulante para ratas, ratones y lauchas, resistente al agua y la humedad.',
       use: 'Colocar bloques donde haya signos cerca de cuevas, paredes y rincones y mantener el cebo fresco hasta que cese el consumo; usar guantes y leer la etiqueta.'
@@ -4978,7 +4981,7 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       desc: 'Cera líquida Blem autobrillo con Durasil lista para usar: brillo radiante transparente y duradero, restaura pisos viejos y evita suciedad en surcos; para mosaicos, cerámicos, baldosas, lajas y plásticos.',
       use: 'Sobre piso limpio y seco, verter y extender uniforme sin lustrar, 1 vez por semana.'
     },
-    'cera-8m-cl-sica-x5lt': {
+    'cera-8m-clasica-x5lt': {
       tag: '8M Classic Diversey · 5 Litros',
       desc: 'Cera 8M Classic incolora emulsionada con polímeros acrílicos: film duro autobrillante sin lustrar que resalta el color natural; para pisos duros y flexibles de interior como cerámicos, mosaicos, vinílicos, lajas, goma y cemento alisado.',
       use: 'Aplicar 1 a 2 capas puro con mopa en forma de ocho, secando 20 a 30 minutos entre capas.'
@@ -4993,12 +4996,12 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       desc: 'Cera 8M roja emulsionada con polímeros acrílicos: reaviva los rojos con alto cubritivo, coloración uniforme duradera y brillo instantáneo; para cerámicos, mosaicos, graníticos, vinílicos, laja, goma y cemento alisado.',
       use: 'Aplicar 2 capas puras y uniformes con paño o mopa, secando 20 a 30 minutos entre capas.'
     },
-    'curador-hidr-fugo-qualibest-x5lt': {
+    'curador-hidrofugo-qualibest-x5lt': {
       tag: 'Qualibest · Natural · 5 Litros',
       desc: 'Curador hidrófugo Qualibest natural a base de siliconas: impermeabiliza superficies muy porosas en paredes y pisos como lajas, hormigón, cemento alisado, ladrillos vista, tejas y cerámicas no esmaltadas.',
       use: 'Lavar profundo, dejar secar y aplicar 1 mano con pincel, rodillo o pasacera.'
     },
-    'curador-hidr-fugo-qualibest-x5lt-negro': {
+    'curador-hidrofugo-qualibest-x5lt-negro': {
       tag: 'Qualibest · Negro · 5 Litros',
       desc: 'Curador hidrófugo Qualibest negro a base de siliconas, listo para usar: impermeabiliza y evita eflorescencia salina, manchas blancas, moho, verdín y humedad en superficies porosas.',
       use: 'Lavar profundo, dejar secar y aplicar 1 mano con pincel, rodillo o pasacera.'
@@ -5178,12 +5181,12 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       desc: 'Repuesto doy pack Lysoform concentrado de 420 ml de la misma fórmula que rinde 35 veces, en original, lavanda, citrus y bebé.',
       use: 'Verter en la botella Lysoform y diluir un tercio de taza en 3 litros de agua.'
     },
-    'vim-desinfecci-n-avanzada-gatillo-x500ml': {
+    'vim-desinfeccion-avanzada-gatillo-x500ml': {
       tag: 'Vim · Desinfección gatillo 500 ml',
       desc: 'Limpiador multisuperficies Vim Desinfección Avanzada en gatillo con lavandina: mata el 99,9 por ciento de hongos, virus y bacterias, para picaportes, cocina y baño, y elimina olores.',
       use: 'Aplicar directo, dejar 5 minutos y pasar paño húmedo.'
     },
-    'vim-desinfecci-n-avanzada-x750ml': {
+    'vim-desinfeccion-avanzada-x750ml': {
       tag: 'Vim · Desinfección 750 ml',
       desc: 'Limpiador líquido desinfectante Vim Desinfección Avanzada de 750 ml: mismo poder desinfectante multisuperficies que mata el 99,9 por ciento de hongos, virus y bacterias.',
       use: 'Aplicar directo, dejar 5 minutos y pasar paño húmedo.'
@@ -5428,7 +5431,7 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       desc: 'Aromatizador de ambientes Make Fresh new style de 270 ml, de fragancia fresca y duradera, compatible con difusores automáticos estándar.',
       use: 'Colocar en difusor automático estándar o pulverizar en el ambiente.'
     },
-    'aromanza-esferas-m-gicas-x-4-unid': {
+    'aromanza-esferas-magicas-x-4-unid': {
       tag: 'Aromanza Iluminarte',
       desc: 'Mezcla Aromanza (Iluminarte) para defumación de resinas de mirra, incienso, benjuí y sándalo, según etiqueta; sin ficha web del fabricante.',
       use: 'Seguir las indicaciones del rótulo.'
@@ -5483,7 +5486,7 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       desc: 'Cepillo limpia mamaderas económico Xibei Baby Love de cerdas espiraladas, compatible con biberones estándar.',
       use: 'Limpiar mamaderas y biberones.'
     },
-    'cepillo-para-u-as-make': {
+    'cepillo-para-unas-make': {
       tag: 'Make · Uñas 3041',
       desc: 'Cepillo Make para uñas simple (cód. 3041) de 8,5x2 cm, de cerdas semiblandas que remueven tierra y bacterias bajo las uñas.',
       use: 'Cepillar uñas y cutículas en el lavado diario.'
@@ -5513,7 +5516,7 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       desc: 'Solución Total Lysoform multiuso de 900 ml: desinfecta y perfuma, mata el 99,9 por ciento de virus y bacterias.',
       use: 'Diaria: 120 ml en 5 litros de agua; profunda o desinfección: puro 5 minutos.'
     },
-    'destapaca-erias-x1lt-ayudin': {
+    'destapacanerias-x1lt-ayudin': {
       tag: 'Ayudin · 1 Litro',
       desc: 'Destapacañerías Ayudin de 1 litro: elimina la materia orgánica de cañerías, desagües y cloacas sin dañarlos, de acción instantánea.',
       use: 'Verter directo al problema según rótulo y enjuagar.'
@@ -5818,7 +5821,7 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       desc: 'Balde oval Samantha con escurridor (cód. 824/6).',
       use: 'Llenar, escurrir la mopa y limpiar.'
     },
-    'bolsa-de-red-para-corpi-os': {
+    'bolsa-de-red-para-corpinos': {
       tag: 'Washing Bag · Corpiños',
       desc: 'Bolsa de red tipo washing bag con cierre para corpiños y prendas delicadas (según empaque).',
       use: 'Meter la prenda delicada, cerrar y lavar en el lavarropas.'
@@ -5853,7 +5856,7 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       desc: 'Cápsulas Sun 4 en 1 pro-expert cleanboost limón por 16 unidades: desengrase profundo, remoción de manchas, ultra brillo y protección de la vajilla, eficaces en ciclos cortos.',
       use: 'Colocar 1 cápsula en el compartimento por ciclo, sin pre-enjuague.'
     },
-    'cepillo-de-u-as-samantha': {
+    'cepillo-de-unas-samantha': {
       tag: 'Samantha · Lava uñas',
       desc: 'Cepillo Samantha lava uñas (cód. 222/24) de cerdas firmes que remueven la suciedad sin dañar la piel.',
       use: 'Higiene de uñas y manos.'
@@ -6188,7 +6191,7 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       desc: 'Jabón líquido Ala lavado total concentrado para diluir de 500 ml que rinde 3 litros (30 lavados): imbatible en manchas, biodegradable y hasta 20 por ciento más económico.',
       use: 'Mezclar los 500 ml con 2,5 litros de agua en botella Ala 3 litros y dosificar 100 ml por carga; usar en 3 meses y solo en auto o semiautomático.'
     },
-    'jab-n-liquido-ariel-x800ml-botella': {
+    'jabon-liquido-ariel-x800ml-botella': {
       tag: 'Ariel · Clásico 800 ml',
       desc: 'Jabón líquido Ariel clásico limpieza impecable en botella de 800 ml (8 lavados, según etiqueta).',
       use: 'Dosificar en el lavarropas según rótulo.'
@@ -6508,7 +6511,7 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       desc: 'Paño de microfibra Samantha para pisos amarillo de 45x65 cm, limpieza mágica: muy absorbente y resistente, no raya ni deja rastros (según empaque).',
       use: 'Usar para pisos, húmedo.'
     },
-    'microfibra-para-vidrios-scotch-brite-kit-x2-pa-os': {
+    'microfibra-para-vidrios-scotch-brite-kit-x2-panos': {
       tag: 'Scotch-Brite · Kit x2',
       desc: 'Kit Scotch-Brite de 2 paños limpia vidrios de 21x31 cm cada uno (limpia y lustra): no mancha, no raya ni suelta pelos (empaque en portugués, origen Brasil).',
       use: 'Uno limpia en húmedo y el otro lustra en seco.'
@@ -6518,27 +6521,27 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       desc: 'Paño de microfibra verde Virulana para superficies de vidrio delicadas y cristalinas, sin rayas ni vetas y eficiente aun solo con agua (según empaque).',
       use: 'Pasar sobre vidrios, solo con agua.'
     },
-    'pa-o-de-microfibra-laffite-x4-unidades': {
+    'pano-de-microfibra-laffite-x4-unidades': {
       tag: 'Laffitte · x4 30x30',
       desc: 'Pack de 4 paños de microfibra Laffitte multiuso de 30x30 cm Clean Revolution: limpieza delicada sin marcas, atrapan suciedad y líquidos y absorben el doble que el algodón, en colores para evitar contaminación cruzada.',
       use: 'Usar un color por zona, en seco o húmedo.'
     },
-    'pa-o-de-microfibra-virulana-x4-unidades': {
+    'pano-de-microfibra-virulana-x4-unidades': {
       tag: 'Virulana · x4 multiuso',
       desc: 'Pack de 4 paños de microfibra Virulana multiuso: atrapan el polvo, de máxima absorción y secado ultra rápido.',
       use: 'Multiuso para el hogar, en seco o húmedo.'
     },
-    'pa-o-escurridor-de-microfibra-laffitte-para-vajilla': {
+    'pano-escurridor-de-microfibra-laffitte-para-vajilla': {
       tag: 'Laffitte · Escurridor vajilla',
       desc: 'Escurridor Laffitte de microfibra para vajilla: escurre evitando salpicaduras en la mesada, evita bacterias, súper absorbente y lavable en lavarropas.',
       use: 'Apoyar la vajilla húmeda encima; lavar en el lavarropas.'
     },
-    'pa-o-escurridor-de-platos-tipo-ballerina': {
+    'pano-escurridor-de-platos-tipo-ballerina': {
       tag: 'Textisol · Bosque Verde',
       desc: 'Paño escurre vajilla Textisol Bosque Verde con microfibra de acción 3D (según foto; no es Ballerina).',
       use: 'Poner bajo los platos mojados como absorbente.'
     },
-    'pa-o-para-piso-mc-pussy': {
+    'pano-para-piso-mc-pussy': {
       tag: 'Mc Pussy · 57x50',
       desc: 'Paño Mc Pussy para piso de 57x50 cm, absorbente, duradero y fácil de escurrir, de máxima limpieza (Dor-es, según empaque).',
       use: 'Humedecer y escurrir para los pisos.'
@@ -6570,7 +6573,9 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
   };
 
   function slug(name) {
-    return name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    // Slug acento-consciente: normT quita tildes/enies ("acción" -> "accion"),
+    // igual que los nombres de archivos en p/.
+    return normT(name.trim()).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
   }
 
   function q(sel) { return document.querySelector(sel); }

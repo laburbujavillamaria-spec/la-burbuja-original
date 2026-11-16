@@ -5,7 +5,19 @@ $outDir = "C:\Users\mili_\Downloads\Nueva carpeta\p"
 # Remove old files first
 Get-ChildItem "$outDir\*.html" -ErrorAction SilentlyContinue | Remove-Item
 
-$cardPattern = [regex]'(?s)<div class="product-card">.*?<img class="product-card-img"[^>]*src="([^"]*)"[^>]*alt="([^"]*)".*?<div class="product-card-name">([^<]+)</div>'
+# Normalize accents (NFD) igual que el sitio: "acción" -> "accion"
+$script:LatinMap = @{
+    'á'='a'; 'é'='e'; 'í'='i'; 'ó'='o'; 'ú'='u'; 'ü'='u'; 'ñ'='n'; 'ç'='c';
+    'Á'='a'; 'É'='e'; 'Í'='i'; 'Ó'='o'; 'Ú'='u'; 'Ü'='u'; 'Ñ'='n'; 'Ç'='c';
+    'à'='a'; 'è'='e'; 'ì'='i'; 'ò'='o'; 'ù'='u'; 'â'='a'; 'ê'='e'; 'î'='i'; 'ô'='o'; 'û'='u'
+}
+function Normalize-Accent([string]$s) {
+    foreach ($k in $script:LatinMap.Keys) { $s = $s.Replace($k, $script:LatinMap[$k]) }
+    return $s
+}
+
+# Match cards con clases adicionales (OFERTAS product-card-discounted, galleries, unit-row, etc.)
+$cardPattern = [regex]'(?s)<div class="product-card[^"]*">.*?<img class="product-card-img[^"]*"[^>]*src="([^"]*)"[^>]*alt="([^"]*)".*?<div class="product-card-name">([^<]+)</div>'
 $catIdPattern = [regex]'(?s)<div class="product-category" id="(cat-[^"]+)">(.*?)(?=<div class="product-category"|</main>)'
 $catMatches = $catIdPattern.Matches($html)
 
@@ -23,8 +35,9 @@ foreach ($cm in $catMatches) {
         $priceMatch = [regex]::Match($catContent.Substring([Math]::Max(0, $m.Index), [Math]::Min(800, $catContent.Length - [Math]::Max(0, $m.Index))), '(?:<div class="product-card-price">|<span class="unit-price">)([^<]+)<')
         $price = if ($priceMatch.Success) { $priceMatch.Groups[1].Value.Trim() } else { "" }
         
-        # Create slug
-        $slug = $name.ToLower() -replace '[^a-z0-9]+', '-' -replace '^-|-$', ''
+        # Create slug: acentos primero, luego minúsculas y [^a-z0-9] -> '-'
+        $nameNorm = Normalize-Accent $name.ToLower()
+        $slug = $nameNorm -replace '[^a-z0-9]+', '-' -replace '^-|-$', ''
         if ([string]::IsNullOrEmpty($slug)) { $slug = "producto-$count" }
         
         # Build absolute image URL - don't double encode
@@ -38,6 +51,14 @@ foreach ($cm in $catMatches) {
         
         # Decode then re-encode properly for og:image
         $absImgForOg = $absImg -replace '%25', '%'
+        # Try HD JPG (WhatsApp no maneja bien WebP): productos/ -> productos_hd/ y extension -> .jpg
+        $hdImg = ($absImgForOg -replace '/productos/', '/productos_hd/') -replace '\.(webp|png|jpe?g)(\?|$)', '.jpg$2'
+        try {
+            $probe = Invoke-WebRequest -Uri $hdImg -Method Head -TimeoutSec 10 -UserAgent 'Mozilla/5.0 Chrome/120.0' -ErrorAction Stop
+            if (($probe.StatusCode -eq 200) -and ($probe.Headers['Content-Type'] -match 'jpeg')) { $absImgForOg = $hdImg }
+        } catch {
+            # HD no existe: se mantiene el WebP original
+        }
         
         $pageTitle = "$name - La Burbuja"
         $escapedTitle = $pageTitle -replace '"', '&quot;'
