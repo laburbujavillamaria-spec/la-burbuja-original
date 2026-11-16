@@ -3710,6 +3710,14 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
   }
   function filterProducts(val) {
     const raw = val.trim();
+    const scrollY = window.pageYOffset;
+    const productsBox = document.querySelector('.products-container');
+    if (productsBox && raw.length > 0) {
+      // Fijar la altura mínima para que el navegador no tire el scroll al final
+      if (!productsBox.style.minHeight) productsBox.style.minHeight = document.documentElement.scrollHeight + 'px';
+    } else if (productsBox) {
+      productsBox.style.minHeight = '';
+    }
     const words = normT(raw).split(/\s+/).filter(Boolean);
     const rawWords = raw.split(/\s+/).filter(Boolean);
     const container = document.querySelector('.product-search');
@@ -3782,7 +3790,8 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       }
     }
     var noResBox = document.getElementById('noResults');
-    if (n === 0 && raw.length > 0) {
+    const showingNoResults = (n === 0 && raw.length > 0);
+    if (showingNoResults) {
       var rawQ = document.getElementById('navSearchInput').value.trim() || document.getElementById('productSearchInput').value.trim() || val.trim();
       document.getElementById('noResultsQuery').textContent = rawQ;
       noResBox.style.display = 'block';
@@ -3792,6 +3801,9 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       if (Math.abs(window.pageYOffset - y0) > 4) window.scrollTo({ top: Math.min(Math.max(y0, 0), maxY0), behavior: 'smooth' });
     } else {
       noResBox.style.display = 'none';
+      // Restaurar posición por si el navegador ajustó el scroll (doble protección)
+      window.scrollTo(0, scrollY);
+      setTimeout(function() { window.scrollTo(0, scrollY); }, 0);
     }
   }
   var _matchIdx = 0;
