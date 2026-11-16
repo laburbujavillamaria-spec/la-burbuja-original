@@ -3736,12 +3736,14 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       // La categoria NO se usa: antes "quita" mostraba 69 productos porque
       // toda la categoria "Ropa, quitamanchas, perfume" coincidia, aunque el
       // nombre no tuviera la palabra (y por eso no se resaltaba en amarillo).
-      // Para palabras con numeros (ej. "450") tambien se acepta el precio.
+      // Para palabras con numeros (ej. "450") tambien se acepta el precio,
+      // pero solo como numero completo y separado (antes "123" matcheaba
+      // cualquier precio que contuviera esos digitos, ej. $1.230 -> carcel incorrecto).
       const ok = words.length === 0 || words.every(w => {
         if (nameT.includes(w)) return true;
         if (/[0-9]/.test(w)) {
           const wd = w.replace(/[^0-9]/g, '');
-          if (wd && priceT.replace(/[^0-9]/g, '').includes(wd)) return true;
+          if (wd && new RegExp('(^|[^0-9])' + wd + '([^0-9]|$)').test(priceT)) return true;
         }
         return false;
       });
