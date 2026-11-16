@@ -3684,10 +3684,6 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
     return (s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
   }
   function escRe(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
-  // Busca la palabra al inicio de una palabra (no como subcadena en medio de otra palabra)
-  function wordStartsWith(hay, w) {
-    return new RegExp('(^|\\s)' + escRe(w), 'i').test(hay);
-  }
   function flexRe(word) {
     const map = { a:'áàäâ', e:'éèëê', i:'íìïî', o:'óòöô', u:'úùüû', n:'ñ', c:'ç' };
     return word.toLowerCase().split('').map(ch => {
@@ -3726,17 +3722,22 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
     cards.forEach(card => {
       const nameEl = card.querySelector('.product-card-name');
       const nameT = normT(nameEl ? nameEl.textContent : '');
-      const cat = card.closest('.product-category');
-      const h3 = cat ? cat.querySelector('.category-header-info h3') : null;
-      const catT = normT(h3 ? h3.textContent : '');
       const priceEl = card.querySelector('.product-card-price') || card.querySelector('.unit-price');
       const priceT = normT(priceEl ? priceEl.textContent : '');
-      let hay = nameT + ' ' + catT + ' ' + priceT;
-      // Se filtra solo por nombre, categoría y precio (lo que el usuario ve);
-      // las desc ocultas de sellerDesc no se usan para evitar falsos positivos.
-      const ok = words.length === 0 || words.every(w => wordStartsWith(hay, w));
-      const catOk = words.length > 0 && words.every(w => catT.includes(w));
-      if (ok || catOk) {
+      // Se filtra por el nombre del producto (lo que el usuario ve).
+      // La categoria NO se usa: antes "quita" mostraba 69 productos porque
+      // toda la categoria "Ropa, quitamanchas, perfume" coincidia, aunque el
+      // nombre no tuviera la palabra (y por eso no se resaltaba en amarillo).
+      // Para palabras con numeros (ej. "450") tambien se acepta el precio.
+      const ok = words.length === 0 || words.every(w => {
+        if (nameT.includes(w)) return true;
+        if (/[0-9]/.test(w)) {
+          const wd = w.replace(/[^0-9]/g, '');
+          if (wd && priceT.replace(/[^0-9]/g, '').includes(wd)) return true;
+        }
+        return false;
+      });
+      if (ok) {
         card.classList.remove('search-hidden');
         if (words.length > 0) highlightCard(card, rawWords);
         else unhighlightCard(card);
