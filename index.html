@@ -3728,12 +3728,8 @@ document.querySelectorAll('.drawer-sub-link[href^="#"], .drawer-link[href^="#"]'
       const priceEl = card.querySelector('.product-card-price') || card.querySelector('.unit-price');
       const priceT = normT(priceEl ? priceEl.textContent : '');
       let hay = nameT + ' ' + catT + ' ' + priceT;
-      try {
-        if (typeof sellerDesc !== 'undefined' && nameEl) {
-          const info = sellerDesc[slug(nameEl.textContent.trim())] || {};
-          hay += ' ' + normT((info.tag || '') + ' ' + (info.desc || '') + ' ' + (info.use || ''));
-        }
-      } catch (e) {}
+      // Se filtra solo por nombre, categoría y precio (lo que el usuario ve);
+      // las desc ocultas de sellerDesc no se usan para evitar falsos positivos.
       const ok = words.length === 0 || words.every(w => hay.includes(w));
       const catOk = words.length > 0 && words.every(w => catT.includes(w));
       if (ok || catOk) {
