@@ -3247,6 +3247,18 @@ function goToCategory(e, targetId) {
   });
 }
 
+// ── SIDEBAR CATEGORY LINKS: asegura que al tocar una categoría del sidebar
+//    se abra el acordeón (móvil), se marque como activa y se haga scroll suave ──
+document.querySelectorAll('.cat-item').forEach(function(item) {
+  item.addEventListener('click', function(e) {
+    var href = item.getAttribute('href');
+    if (href && href.startsWith('#')) {
+      e.preventDefault();
+      goToCategory(e, href.slice(1));
+    }
+  });
+});
+
 function toggleAccordion(id) {
   const acc = document.getElementById(id);
   const isOpen = acc.classList.contains('active');
