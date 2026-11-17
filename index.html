@@ -2887,7 +2887,7 @@ document.querySelectorAll('.cat-item').forEach(function(tab) {
       var btn = target.querySelector('.cat-toggle-btn');
       if (btn) btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 15l-6-6-6 6"/></svg> Contraer categoría';
     }
-    target.scrollIntoView({ behavior: 'auto', block: 'start' });
+    window.scrollTo({ top: target.getBoundingClientRect().top + window.pageYOffset - 160, behavior: 'auto' });
   });
 });
 var _igSearchInput = document.getElementById('productSearchInput');
@@ -3241,7 +3241,7 @@ function goToCategory(e, targetId) {
   }
   requestAnimationFrame(function() {
     requestAnimationFrame(function() {
-      target.scrollIntoView({ behavior: 'auto', block: 'start' });
+      window.scrollTo({ top: target.getBoundingClientRect().top + window.pageYOffset - 160, behavior: 'auto' });
     });
   });
 }
