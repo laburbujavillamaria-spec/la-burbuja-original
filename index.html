@@ -2868,7 +2868,7 @@ _allCats.forEach(function(cat) {
   actions.appendChild(topBtn);
   header.appendChild(actions);
 });
-// Sidebar tab clicks expand the category (event delegation, robusto en escritorio y móvil)
+// Sidebar tab clicks expand the category (event delegation, capture phase so preventDefault works on <a href>)
 document.addEventListener('click', function(e) {
     var item = e.target.closest('.cat-item');
     if (!item) return;
@@ -2890,7 +2890,7 @@ document.addEventListener('click', function(e) {
       if(btn) btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M18 15l-6-6-6 6"/></svg> Contraer categoría';
     }
     window.scrollTo({ top: target.getBoundingClientRect().top + window.pageYOffset - 160, behavior: 'auto' });
-});
+}, true);
 var _igSearchInput = document.getElementById('productSearchInput');
 var _igNavSearchInput = document.getElementById('navSearchInput');
 function _igToggleSearch() {
